@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react';
 import { initSDK, getAccelerationMode } from './runanywhere';
+import { ParallelYouTab } from './components/ParallelYouTab';
 import { ChatTab } from './components/ChatTab';
 import { VisionTab } from './components/VisionTab';
 import { VoiceTab } from './components/VoiceTab';
 import { ToolsTab } from './components/ToolsTab';
 
-type Tab = 'chat' | 'vision' | 'voice' | 'tools';
+type Tab = 'parallel' | 'chat' | 'vision' | 'voice' | 'tools';
 
 export function App() {
   const [sdkReady, setSdkReady] = useState(false);
   const [sdkError, setSdkError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<Tab>('chat');
+  const [activeTab, setActiveTab] = useState<Tab>('parallel');
 
   useEffect(() => {
     initSDK()
@@ -47,6 +48,9 @@ export function App() {
       </header>
 
       <nav className="tab-bar">
+        <button className={activeTab === 'parallel' ? 'active' : ''} onClick={() => setActiveTab('parallel')}>
+          🔮 ParallelYou
+        </button>
         <button className={activeTab === 'chat' ? 'active' : ''} onClick={() => setActiveTab('chat')}>
           💬 Chat
         </button>
@@ -62,6 +66,7 @@ export function App() {
       </nav>
 
       <main className="tab-content">
+        {activeTab === 'parallel' && <ParallelYouTab />}
         {activeTab === 'chat' && <ChatTab />}
         {activeTab === 'vision' && <VisionTab />}
         {activeTab === 'voice' && <VoiceTab />}
