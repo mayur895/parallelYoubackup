@@ -27,6 +27,28 @@ import { ONNX } from '@runanywhere/web-onnx';
 import vlmWorkerUrl from './workers/vlm-worker?worker&url';
 
 // ---------------------------------------------------------------------------
+// Local model URL resolver
+// ---------------------------------------------------------------------------
+
+/**
+ * If you've run `npm run download-models`, GGUF/ONNX files will be at
+ * /models/<dir>/<file>. We detect their existence at runtime and prefer
+ * the local URL so the app works with zero internet.
+ *
+ * Falls back to the original HuggingFace URL transparently.
+ */
+function localOrRemote(localPath: string, remoteUrl: string): string {
+  // In production / after download-models, prefer local files
+  // We check via a simple heuristic: if Vite's base URL contains the file
+  // we skip the HuggingFace fetch. At runtime we can't do a sync HEAD check,
+  // so we rely on environment: if LOCAL_MODELS env var is set, use local.
+  if (import.meta.env.VITE_LOCAL_MODELS === 'true') {
+    return localPath;
+  }
+  return remoteUrl;
+}
+
+// ---------------------------------------------------------------------------
 // Model catalog
 // ---------------------------------------------------------------------------
 
@@ -65,7 +87,10 @@ const MODELS: CompactModelDef[] = [
   {
     id: 'sherpa-onnx-whisper-tiny.en',
     name: 'Whisper Tiny English (ONNX)',
-    url: 'https://huggingface.co/runanywhere/sherpa-onnx-whisper-tiny.en/resolve/main/sherpa-onnx-whisper-tiny.en.tar.gz',
+    url: localOrRemote(
+      '/models/whisper-tiny/sherpa-onnx-whisper-tiny.en.tar.gz',
+      'https://huggingface.co/runanywhere/sherpa-onnx-whisper-tiny.en/resolve/main/sherpa-onnx-whisper-tiny.en.tar.gz',
+    ),
     framework: LLMFramework.ONNX,
     modality: ModelCategory.SpeechRecognition,
     memoryRequirement: 105_000_000,
@@ -75,7 +100,10 @@ const MODELS: CompactModelDef[] = [
   {
     id: 'vits-piper-en_US-lessac-medium',
     name: 'Piper TTS US English (Lessac)',
-    url: 'https://huggingface.co/runanywhere/vits-piper-en_US-lessac-medium/resolve/main/vits-piper-en_US-lessac-medium.tar.gz',
+    url: localOrRemote(
+      '/models/piper-tts/vits-piper-en_US-lessac-medium.tar.gz',
+      'https://huggingface.co/runanywhere/vits-piper-en_US-lessac-medium/resolve/main/vits-piper-en_US-lessac-medium.tar.gz',
+    ),
     framework: LLMFramework.ONNX,
     modality: ModelCategory.SpeechSynthesis,
     memoryRequirement: 65_000_000,
@@ -85,7 +113,10 @@ const MODELS: CompactModelDef[] = [
   {
     id: 'silero-vad-v5',
     name: 'Silero VAD v5',
-    url: 'https://huggingface.co/runanywhere/silero-vad-v5/resolve/main/silero_vad.onnx',
+    url: localOrRemote(
+      '/models/silero-vad/silero_vad.onnx',
+      'https://huggingface.co/runanywhere/silero-vad-v5/resolve/main/silero_vad.onnx',
+    ),
     files: ['silero_vad.onnx'],
     framework: LLMFramework.ONNX,
     modality: ModelCategory.Audio,

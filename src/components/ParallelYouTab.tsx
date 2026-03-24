@@ -1,8 +1,37 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ModelCategory } from '@runanywhere/web';
+import { TextGeneration } from '@runanywhere/web-llamacpp';
+import { useModelLoader } from '../hooks/useModelLoader';
+import { ModelBanner } from './ModelBanner';
+import { initSDK } from '../runanywhere';
+import {
+  type JourneyState, type GeneratedCheckpoint, type CheckpointChoice, type Achievement,
+  createInitialState, applyDecision, generateCheckpoint, computeAchievements,
+  generateLifeStory, checkpointTemplateMap,
+} from '../engine/journeyEngine';
+
+// ─── Types ───────────────────────────────────────────────────────────────────
+
+type Phase = 'intro' | 'category' | 'scenario' | 'questions' | 'simulating' | 'reveal' | 'journey' | 'summary';
+
+interface Category {
+  id: string;
+  emoji: string;
+  label: string;
+  tagline: string;
+  color: string;
+  questions: Question[];
+}
+
+interface Question {
+  text: string;
+  options: { label: string; emoji: string; value: string }[];
+}
 
 interface SimulationPath {
   title: string;
+  emoji: string;
   year1: string;
   year5: string;
   year10: string;
@@ -12,521 +41,862 @@ interface SimulationPath {
   financialScore: number;
   happinessScore: number;
   riskLevel: 'Low' | 'Medium' | 'High';
-  timeInvestment: string;
-  regretRisk: number;
   keyInsight: string;
 }
 
 interface SimulationResults {
   paths: SimulationPath[];
-  recommendation: {
-    winner: 'A' | 'B';
-    reason: string;
-    confidenceScore: number;
-  };
-  hiddenCosts: {
-    pathA: string;
-    pathB: string;
-  };
+  recommendation: { winner: 'A' | 'B'; reason: string; confidenceScore: number };
+  hiddenCosts: { pathA: string; pathB: string };
 }
 
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY as string;
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+// ─── Categories & Questions ──────────────────────────────────────────────────
 
-async function callGemini(prompt: string, systemPrompt: string): Promise<string> {
-  const body = {
-    system_instruction: { parts: [{ text: systemPrompt }] },
-    contents: [{ parts: [{ text: prompt }] }],
-    generationConfig: {
-      temperature: 0.7,
-      maxOutputTokens: 800,
-    },
-  };
+const CATEGORIES: Category[] = [
+  {
+    id: 'career', emoji: '\u{1F680}', label: 'Career', tagline: 'Shape your professional destiny', color: 'from-violet-600 to-indigo-600',
+    questions: [
+      { text: 'How do you feel about risk in your career?', options: [
+        { label: 'Play it safe', emoji: '\u{1F6E1}\u{FE0F}', value: 'risk_averse' }, { label: 'Calculated risks', emoji: '\u{1F3AF}', value: 'moderate' },
+        { label: 'Go big or go home', emoji: '\u{1F525}', value: 'risk_taker' }, { label: 'Depends on stakes', emoji: '\u{1F914}', value: 'contextual' },
+      ]},
+      { text: 'What matters most to you at work?', options: [
+        { label: 'Money & growth', emoji: '\u{1F4B0}', value: 'financial' }, { label: 'Purpose & impact', emoji: '\u{1F31F}', value: 'purpose' },
+        { label: 'Freedom & flexibility', emoji: '\u{1F54A}\u{FE0F}', value: 'freedom' }, { label: 'Stability & security', emoji: '\u{1F3E0}', value: 'stability' },
+      ]},
+      { text: 'How do you handle setbacks?', options: [
+        { label: 'Bounce back fast', emoji: '\u{26A1}', value: 'resilient' }, { label: 'Need time to recover', emoji: '\u{1F331}', value: 'slow_recovery' },
+        { label: 'Learn and pivot', emoji: '\u{1F504}', value: 'adaptive' }, { label: 'Avoid them entirely', emoji: '\u{1F6E1}\u{FE0F}', value: 'avoidant' },
+      ]},
+      { text: 'Where do you see yourself in 5 years?', options: [
+        { label: 'Leading a team', emoji: '\u{1F451}', value: 'leadership' }, { label: 'Deep expertise', emoji: '\u{1F9E0}', value: 'specialist' },
+        { label: 'Running my thing', emoji: '\u{1F3D7}\u{FE0F}', value: 'entrepreneur' }, { label: 'Still exploring', emoji: '\u{1F30D}', value: 'exploring' },
+      ]},
+      { text: 'How satisfied are you with your current path?', options: [
+        { label: 'Very happy', emoji: '\u{1F60A}', value: 'satisfied' }, { label: 'It\'s okay', emoji: '\u{1F610}', value: 'neutral' },
+        { label: 'Restless', emoji: '\u{1F4AD}', value: 'restless' }, { label: 'Need a change', emoji: '\u{1F6A8}', value: 'urgent_change' },
+      ]},
+    ],
+  },
+  {
+    id: 'life', emoji: '\u{1F30D}', label: 'Life Move', tagline: 'Relocate, travel, or stay rooted', color: 'from-emerald-600 to-teal-600',
+    questions: [
+      { text: 'How important is being close to family?', options: [
+        { label: 'Everything', emoji: '\u{2764}\u{FE0F}', value: 'very_important' }, { label: 'Nice but not critical', emoji: '\u{1F44D}', value: 'moderate' },
+        { label: 'I\'m independent', emoji: '\u{1F985}', value: 'independent' }, { label: 'It\'s complicated', emoji: '\u{1F615}', value: 'complicated' },
+      ]},
+      { text: 'How do you feel about the unknown?', options: [
+        { label: 'Thrilling!', emoji: '\u{1F389}', value: 'excited' }, { label: 'Nervous but curious', emoji: '\u{1F60C}', value: 'cautious_curious' },
+        { label: 'Prefer predictable', emoji: '\u{1F4CB}', value: 'predictable' }, { label: 'Terrifying', emoji: '\u{1F628}', value: 'anxious' },
+      ]},
+      { text: 'What\'s your financial safety net like?', options: [
+        { label: '6+ months saved', emoji: '\u{1F3E6}', value: 'strong' }, { label: '2-5 months', emoji: '\u{1F4B5}', value: 'moderate' },
+        { label: 'Living paycheck to paycheck', emoji: '\u{1F62C}', value: 'tight' }, { label: 'It\'s complicated', emoji: '\u{1F4CA}', value: 'variable' },
+      ]},
+      { text: 'How adaptable are you to new environments?', options: [
+        { label: 'Chameleon mode', emoji: '\u{1F98E}', value: 'very_adaptable' }, { label: 'Takes me a while', emoji: '\u{1F422}', value: 'slow_adapter' },
+        { label: 'I need my comfort zone', emoji: '\u{1F6CB}\u{FE0F}', value: 'comfort_seeker' }, { label: 'Depends on people', emoji: '\u{1F465}', value: 'social_dependent' },
+      ]},
+      { text: 'What are you hoping to gain?', options: [
+        { label: 'Better opportunities', emoji: '\u{1F4C8}', value: 'opportunities' }, { label: 'Fresh start', emoji: '\u{1F331}', value: 'fresh_start' },
+        { label: 'Adventure', emoji: '\u{26F0}\u{FE0F}', value: 'adventure' }, { label: 'Peace of mind', emoji: '\u{1F54A}\u{FE0F}', value: 'peace' },
+      ]},
+    ],
+  },
+  {
+    id: 'education', emoji: '\u{1F393}', label: 'Education', tagline: 'Level up your knowledge', color: 'from-amber-600 to-orange-600',
+    questions: [
+      { text: 'Why pursue more education?', options: [
+        { label: 'Career advancement', emoji: '\u{1F4BC}', value: 'career' }, { label: 'Passion for learning', emoji: '\u{1F4DA}', value: 'passion' },
+        { label: 'Higher salary', emoji: '\u{1F4B0}', value: 'salary' }, { label: 'Not sure yet', emoji: '\u{1F937}', value: 'uncertain' },
+      ]},
+      { text: 'How do you learn best?', options: [
+        { label: 'Structured classes', emoji: '\u{1F3EB}', value: 'structured' }, { label: 'Self-taught', emoji: '\u{1F4BB}', value: 'self_taught' },
+        { label: 'Hands-on projects', emoji: '\u{1F528}', value: 'hands_on' }, { label: 'Mix of everything', emoji: '\u{1F500}', value: 'mixed' },
+      ]},
+      { text: 'How do you feel about debt?', options: [
+        { label: 'Worth the investment', emoji: '\u{1F4B3}', value: 'acceptable' }, { label: 'Scary but necessary', emoji: '\u{1F630}', value: 'reluctant' },
+        { label: 'Absolutely not', emoji: '\u{1F6AB}', value: 'no_debt' }, { label: 'Already have some', emoji: '\u{1F4C9}', value: 'existing_debt' },
+      ]},
+      { text: 'Time availability?', options: [
+        { label: 'Full-time ready', emoji: '\u{23F0}', value: 'full_time' }, { label: 'Part-time only', emoji: '\u{1F319}', value: 'part_time' },
+        { label: 'Weekends & evenings', emoji: '\u{1F303}', value: 'evenings' }, { label: 'Very limited', emoji: '\u{23F3}', value: 'limited' },
+      ]},
+      { text: 'How patient with long-term goals?', options: [
+        { label: 'Very patient', emoji: '\u{1F9D8}', value: 'patient' }, { label: 'Want results soon', emoji: '\u{26A1}', value: 'impatient' },
+        { label: 'Depends on the goal', emoji: '\u{1F3AF}', value: 'conditional' }, { label: 'I struggle', emoji: '\u{1F613}', value: 'low_patience' },
+      ]},
+    ],
+  },
+  {
+    id: 'finance', emoji: '\u{1F4B8}', label: 'Finance', tagline: 'Invest, save, or spend wisely', color: 'from-green-600 to-emerald-600',
+    questions: [
+      { text: 'Relationship with money?', options: [
+        { label: 'Save aggressively', emoji: '\u{1F3E6}', value: 'saver' }, { label: 'Balanced approach', emoji: '\u{2696}\u{FE0F}', value: 'balanced' },
+        { label: 'Enjoy spending', emoji: '\u{1F6CD}\u{FE0F}', value: 'spender' }, { label: 'Stressed about it', emoji: '\u{1F62B}', value: 'stressed' },
+      ]},
+      { text: 'Financial risk tolerance?', options: [
+        { label: 'Crypto-level', emoji: '\u{1F4C8}', value: 'high_risk' }, { label: 'Index funds', emoji: '\u{1F4CA}', value: 'moderate_risk' },
+        { label: 'Savings account only', emoji: '\u{1F512}', value: 'low_risk' }, { label: 'What\'s an index fund?', emoji: '\u{1F914}', value: 'beginner' },
+      ]},
+      { text: 'Income stability?', options: [
+        { label: 'Steady paycheck', emoji: '\u{1F4B5}', value: 'stable' }, { label: 'Freelance/variable', emoji: '\u{1F3A2}', value: 'variable' },
+        { label: 'Multiple streams', emoji: '\u{1F4B0}', value: 'multiple' }, { label: 'Between jobs', emoji: '\u{1F50D}', value: 'searching' },
+      ]},
+      { text: 'Biggest financial goal?', options: [
+        { label: 'Buy a home', emoji: '\u{1F3E0}', value: 'home' }, { label: 'Retire early', emoji: '\u{1F3D6}\u{FE0F}', value: 'retire' },
+        { label: 'Build wealth', emoji: '\u{1F48E}', value: 'wealth' }, { label: 'Get out of debt', emoji: '\u{1F3C3}', value: 'debt_free' },
+      ]},
+      { text: 'How long can you wait?', options: [
+        { label: '10+ years', emoji: '\u{1F9D3}', value: 'long_term' }, { label: '3-5 years', emoji: '\u{1F4C5}', value: 'medium_term' },
+        { label: 'Need results now', emoji: '\u{26A1}', value: 'short_term' }, { label: 'Depends', emoji: '\u{1F4B2}', value: 'conditional' },
+      ]},
+    ],
+  },
+  {
+    id: 'relationship', emoji: '\u{2764}\u{FE0F}', label: 'Relationships', tagline: 'Navigate life with others', color: 'from-pink-600 to-rose-600',
+    questions: [
+      { text: 'Top priority in relationships?', options: [
+        { label: 'Trust & loyalty', emoji: '\u{1F91D}', value: 'trust' }, { label: 'Growth together', emoji: '\u{1F331}', value: 'growth' },
+        { label: 'Fun & adventure', emoji: '\u{1F389}', value: 'fun' }, { label: 'Emotional support', emoji: '\u{1F917}', value: 'support' },
+      ]},
+      { text: 'How do you handle conflict?', options: [
+        { label: 'Talk it out', emoji: '\u{1F4AC}', value: 'direct' }, { label: 'Need space first', emoji: '\u{1F30C}', value: 'space' },
+        { label: 'Avoid if possible', emoji: '\u{1F648}', value: 'avoidant' }, { label: 'Depends on the issue', emoji: '\u{1F914}', value: 'contextual' },
+      ]},
+      { text: 'How much independence?', options: [
+        { label: 'Lots of me-time', emoji: '\u{1F9D8}', value: 'high' }, { label: 'Healthy balance', emoji: '\u{2696}\u{FE0F}', value: 'balanced' },
+        { label: 'Love togetherness', emoji: '\u{1F46B}', value: 'low' }, { label: 'Still figuring out', emoji: '\u{1F4AD}', value: 'uncertain' },
+      ]},
+      { text: 'Head or heart driven?', options: [
+        { label: 'Pure logic', emoji: '\u{1F9E0}', value: 'logical' }, { label: 'Follow my heart', emoji: '\u{2764}\u{FE0F}', value: 'emotional' },
+        { label: 'Balance of both', emoji: '\u{2696}\u{FE0F}', value: 'balanced' }, { label: 'Gut instinct', emoji: '\u{26A1}', value: 'instinct' },
+      ]},
+      { text: 'Biggest relationship fear?', options: [
+        { label: 'Being stuck', emoji: '\u{1F512}', value: 'stagnation' }, { label: 'Being alone', emoji: '\u{1F30C}', value: 'loneliness' },
+        { label: 'Getting hurt', emoji: '\u{1F494}', value: 'hurt' }, { label: 'Missing out', emoji: '\u{231B}', value: 'fomo' },
+      ]},
+    ],
+  },
+  {
+    id: 'adventure', emoji: '\u{26A1}', label: 'Wild Card', tagline: 'The unexpected life choices', color: 'from-fuchsia-600 to-purple-600',
+    questions: [
+      { text: 'How spontaneous are you?', options: [
+        { label: 'Plan everything', emoji: '\u{1F4CB}', value: 'planner' }, { label: 'Go with the flow', emoji: '\u{1F30A}', value: 'spontaneous' },
+        { label: 'Organized chaos', emoji: '\u{1F300}', value: 'mixed' }, { label: 'Depends on mood', emoji: '\u{1F3B2}', value: 'mood_based' },
+      ]},
+      { text: 'What excites you most?', options: [
+        { label: 'New experiences', emoji: '\u{1F30D}', value: 'novelty' }, { label: 'Building something', emoji: '\u{1F3D7}\u{FE0F}', value: 'creation' },
+        { label: 'Mastering a skill', emoji: '\u{1F3AF}', value: 'mastery' }, { label: 'Connecting with people', emoji: '\u{1F465}', value: 'connection' },
+      ]},
+      { text: 'If this fails, backup plan?', options: [
+        { label: 'Already have one', emoji: '\u{1F4DD}', value: 'prepared' }, { label: 'I\'ll figure it out', emoji: '\u{1F937}', value: 'wing_it' },
+        { label: 'No backup, all in', emoji: '\u{1F525}', value: 'all_in' }, { label: 'That scares me', emoji: '\u{1F628}', value: 'scared' },
+      ]},
+      { text: 'Future self would thank you for?', options: [
+        { label: 'Taking the leap', emoji: '\u{1F680}', value: 'courage' }, { label: 'Being patient', emoji: '\u{1F9D8}', value: 'patience' },
+        { label: 'Choosing happiness', emoji: '\u{1F60A}', value: 'happiness' }, { label: 'Playing it smart', emoji: '\u{1F9E0}', value: 'wisdom' },
+      ]},
+      { text: 'How do you feel RIGHT NOW?', options: [
+        { label: 'Excited and ready', emoji: '\u{1F4AA}', value: 'ready' }, { label: 'Nervous but hopeful', emoji: '\u{1F332}', value: 'hopeful' },
+        { label: 'Overwhelmed', emoji: '\u{1F32A}\u{FE0F}', value: 'overwhelmed' }, { label: 'Just curious', emoji: '\u{1F440}', value: 'curious' },
+      ]},
+    ],
+  },
+];
 
-  const res = await fetch(GEMINI_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
+// ─── Quick-Pick Scenario Examples ────────────────────────────────────────────
 
-  if (!res.ok) {
-    const errBody = await res.text();
-    throw new Error(`Gemini API error (${res.status}): ${errBody}`);
+const SCENARIO_EXAMPLES: Record<string, { emoji: string; label: string; text: string }[]> = {
+  career: [
+    { emoji: '\u{1F4BC}', label: 'Quit & start a startup', text: 'Should I leave my stable job to start my own tech startup?' },
+    { emoji: '\u{1F4B0}', label: 'Ask for a big raise', text: 'Should I ask for a 40% raise or start looking for a new job?' },
+    { emoji: '\u{1F30D}', label: 'Remote vs office', text: 'Should I take a remote job with less pay or stay in-office with more pay?' },
+    { emoji: '\u{1F504}', label: 'Career switch', text: 'Should I switch from engineering to product management?' },
+  ],
+  life: [
+    { emoji: '\u{2708}\u{FE0F}', label: 'Move abroad', text: 'Should I move to another country for better opportunities?' },
+    { emoji: '\u{1F3E0}', label: 'City vs hometown', text: 'Should I stay in my hometown near family or move to a big city?' },
+    { emoji: '\u{1F697}', label: 'Minimalist life', text: 'Should I sell everything and travel the world for a year?' },
+    { emoji: '\u{1F3D9}\u{FE0F}', label: 'New city fresh start', text: 'Should I move to a new city where I know nobody for a fresh start?' },
+  ],
+  education: [
+    { emoji: '\u{1F393}', label: 'PhD or work', text: 'Should I pursue a PhD or join the industry with my masters degree?' },
+    { emoji: '\u{1F4BB}', label: 'Bootcamp vs degree', text: 'Should I do a coding bootcamp or get a full computer science degree?' },
+    { emoji: '\u{1F4DA}', label: 'MBA worth it?', text: 'Should I get an MBA or use that time and money to build a business?' },
+    { emoji: '\u{1F310}', label: 'Study abroad', text: 'Should I study abroad for a semester or stay and do internships?' },
+  ],
+  finance: [
+    { emoji: '\u{1F3E0}', label: 'Buy vs rent', text: 'Should I buy a house now or keep renting and investing in stocks?' },
+    { emoji: '\u{1F4C8}', label: 'Invest aggressively', text: 'Should I put my savings into crypto and stocks or keep it in a savings account?' },
+    { emoji: '\u{1F3D7}\u{FE0F}', label: 'Side business', text: 'Should I invest my savings into starting a side business?' },
+    { emoji: '\u{1F4B3}', label: 'Pay off debt first', text: 'Should I aggressively pay off student loans or invest while making minimum payments?' },
+  ],
+  relationship: [
+    { emoji: '\u{1F48D}', label: 'Long distance', text: 'Should I move for my partner or ask them to move for me?' },
+    { emoji: '\u{1F465}', label: 'Toxic friendship', text: 'Should I cut off a longtime friend who has become toxic?' },
+    { emoji: '\u{2764}\u{FE0F}', label: 'Settle down', text: 'Should I settle down now or stay single and focus on my goals?' },
+    { emoji: '\u{1F46A}', label: 'Family pressure', text: 'Should I follow my family expectations or pursue what makes me happy?' },
+  ],
+  adventure: [
+    { emoji: '\u{1F3A4}', label: 'Dream pursuit', text: 'Should I drop everything and pursue my dream of becoming a musician?' },
+    { emoji: '\u{1F680}', label: 'Crazy bet', text: 'Should I invest my savings into building an app idea I am passionate about?' },
+    { emoji: '\u{26F0}\u{FE0F}', label: 'Gap year', text: 'Should I take a gap year to travel and find myself?' },
+    { emoji: '\u{1F3AE}', label: 'Passion project', text: 'Should I quit my job to work on my passion project full-time?' },
+  ],
+};
+
+// ─── Simulating Messages ─────────────────────────────────────────────────────
+
+const SIMULATING_MESSAGES = [
+  'Analyzing your decision...',
+  'Projecting possible futures...',
+  'Simulating consequences...',
+  'Comparing parallel timelines...',
+  'Rendering your destiny...',
+];
+
+// ─── LLM Helper ──────────────────────────────────────────────────────────────
+
+async function callLocalLLM(prompt: string, onToken?: (token: string) => void): Promise<string> {
+  await initSDK();
+  const { stream, result: resultPromise } = await TextGeneration.generateStream(prompt, { maxTokens: 200, temperature: 0.5 });
+  let accumulated = '';
+  for await (const token of stream) { accumulated += token; onToken?.(token); }
+  await resultPromise;
+  return accumulated;
+}
+
+function deriveScoresFromAnswers(answers: string[]) {
+  let risk = 50, financial = 5, happiness = 5;
+  for (const a of answers) {
+    if (['risk_taker', 'all_in', 'spontaneous', 'high_risk', 'courage'].includes(a)) risk += 15;
+    if (['risk_averse', 'avoidant', 'predictable', 'low_risk', 'planner', 'comfort_seeker'].includes(a)) risk -= 15;
+    if (['financial', 'salary', 'saver', 'wealth', 'home', 'strong'].includes(a)) financial += 1;
+    if (['spender', 'tight', 'stressed', 'searching'].includes(a)) financial -= 1;
+    if (['purpose', 'freedom', 'fun', 'adventure', 'fresh_start', 'happiness', 'peace'].includes(a)) happiness += 1;
+    if (['urgent_change', 'overwhelmed', 'anxious', 'stagnation'].includes(a)) happiness -= 1;
   }
-
-  const data = await res.json();
-  return data?.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+  return { riskTolerance: Math.max(10, Math.min(90, risk)), financialBias: Math.max(1, Math.min(10, financial)), happinessBias: Math.max(1, Math.min(10, happiness)) };
 }
+
+// ─── Sub-components ──────────────────────────────────────────────────────────
+
+function ParticleField() {
+  return (
+    <div className="particle-field">
+      {Array.from({ length: 30 }).map((_, i) => (
+        <div key={i} className="particle" style={{
+          left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`,
+          animationDelay: `${Math.random() * 5}s`, animationDuration: `${3 + Math.random() * 4}s`,
+          width: `${2 + Math.random() * 4}px`, height: `${2 + Math.random() * 4}px`,
+        }} />
+      ))}
+    </div>
+  );
+}
+
+function XPBar({ xp, level }: { xp: number; level: number }) {
+  const progress = (xp % 100) / 100 * 100;
+  return (
+    <div className="xp-bar-container">
+      <div className="xp-bar-label"><span className="xp-level">LVL {level}</span><span className="xp-text">{xp} XP</span></div>
+      <div className="xp-bar-track"><motion.div className="xp-bar-fill" animate={{ width: `${progress}%` }} transition={{ duration: 0.6 }} /></div>
+    </div>
+  );
+}
+
+function ProgressSteps({ current, total }: { current: number; total: number }) {
+  return (
+    <div className="progress-steps">
+      {Array.from({ length: total }).map((_, i) => (
+        <div key={i} className={`progress-step ${i < current ? 'completed' : ''} ${i === current ? 'active' : ''}`}>
+          {i < current ? '\u2713' : i + 1}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ─── Main Component ──────────────────────────────────────────────────────────
 
 export function ParallelYouTab() {
-  const [input, setInput] = useState('');
+  const loader = useModelLoader(ModelCategory.Language);
+
+  // Game state
+  const [phase, setPhase] = useState<Phase>('intro');
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [scenario, setScenario] = useState('');
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [answers, setAnswers] = useState<string[]>([]);
+  const [xp, setXp] = useState(0);
+  const [level, setLevel] = useState(1);
   const [results, setResults] = useState<SimulationResults | null>(null);
-  const [simulating, setSimulating] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [streamText, setStreamText] = useState('');
+  const [simulatingMsg, setSimulatingMsg] = useState('');
+  const [streamSnippet, setStreamSnippet] = useState('');
+  const [tokenProgress, setTokenProgress] = useState(0);
+  const [chosenPath, setChosenPath] = useState<'A' | 'B' | null>(null);
+  const [showXpPopup, setShowXpPopup] = useState(false);
+  const simulatingRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const runSimulationRef = useRef<((answers: string[]) => Promise<void>) | null>(null);
 
-  const generateSimulation = useCallback(async () => {
-    if (!input.trim()) {
-      setError('Please enter a decision or life choice');
-      return;
+  // Journey engine state
+  const [journeyState, setJourneyState] = useState<JourneyState | null>(null);
+  const [journeyStep, setJourneyStep] = useState(0);
+  const [currentCheckpoint, setCurrentCheckpoint] = useState<GeneratedCheckpoint | null>(null);
+  const [showOutcome, setShowOutcome] = useState<string | null>(null);
+  const [showMilestone, setShowMilestone] = useState<string | null>(null);
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+
+  useEffect(() => { initSDK().catch(console.error); }, []);
+
+  // Cycle simulating messages
+  useEffect(() => {
+    if (phase === 'simulating') {
+      let idx = 0;
+      setSimulatingMsg(SIMULATING_MESSAGES[0]);
+      simulatingRef.current = setInterval(() => { idx = (idx + 1) % SIMULATING_MESSAGES.length; setSimulatingMsg(SIMULATING_MESSAGES[idx]); }, 2000);
+      return () => { if (simulatingRef.current) clearInterval(simulatingRef.current); };
     }
+  }, [phase]);
 
-    if (!GEMINI_API_KEY || GEMINI_API_KEY === 'YOUR_GEMINI_API_KEY_HERE') {
-      setError('Please set your VITE_GEMINI_API_KEY in the .env file and restart the server.');
-      return;
-    }
+  const addXP = useCallback((amount: number) => {
+    setXp(prev => { const next = prev + amount; setLevel(Math.floor(next / 100) + 1); return next; });
+    setShowXpPopup(true);
+    setTimeout(() => setShowXpPopup(false), 1000);
+  }, []);
 
-    setSimulating(true);
-    setError(null);
-    setResults(null);
-    setStreamText('Thinking...');
+  const handleCategorySelect = useCallback((cat: Category) => {
+    setSelectedCategory(cat); addXP(20); setTimeout(() => setPhase('scenario'), 400);
+  }, [addXP]);
 
-    const systemPrompt = `You are an advanced life decision analyzer. Your responses must be structured, data-driven, and realistic. Always reply in the exact numbered format requested.`;
+  const handleScenarioSubmit = useCallback(() => {
+    if (!scenario.trim()) return; addXP(30); setCurrentQuestion(0); setAnswers([]); setTimeout(() => setPhase('questions'), 400);
+  }, [scenario, addXP]);
 
-    const prompt = `Analyze this life decision: "${input}"
+  // Pre-load model during questions
+  useEffect(() => { if (phase === 'questions' && loader.state === 'idle') loader.ensure().catch(() => {}); }, [phase, loader]);
 
-Reply with numbered answers only (max 12 words per answer):
+  const runSimulation = useCallback(async (allAnswers: string[]) => {
+    const ok = await loader.ensure();
+    if (!ok) { setError('Failed to load AI model.'); setPhase('intro'); return; }
 
-PATH A (Safe/Conservative):
-1. Path A name:
-2. Year 1 outcome:
-3. Year 5 outcome:
-4. Year 10 outcome:
-5. Main pros:
-6. Main cons:
-7. Success rate (0-100):
-8. Financial score (0-10):
-9. Happiness score (0-10):
-10. Risk level (Low/Medium/High):
-11. Time investment needed:
-12. Regret probability (0-100):
-13. Key insight:
-
-PATH B (Risky/Bold):
-14. Path B name:
-15. Year 1 outcome:
-16. Year 5 outcome:
-17. Year 10 outcome:
-18. Main pros:
-19. Main cons:
-20. Success rate (0-100):
-21. Financial score (0-10):
-22. Happiness score (0-10):
-23. Risk level (Low/Medium/High):
-24. Time investment needed:
-25. Regret probability (0-100):
-26. Key insight:
-
-OVERALL:
-27. Better choice (A or B):
-28. Why (one sentence):
-29. Confidence (0-100):
-30. Hidden cost Path A:
-31. Hidden cost Path B:`;
+    const scores = deriveScoresFromAnswers(allAnswers);
+    const prompt = `Decision: "${scenario}" (${selectedCategory?.label})\n\nReply ONLY with numbered answers, max 5 words each:\n1. Safe path name:\n2. Safe outcome:\n3. Bold path name:\n4. Bold outcome:\n5. Safe pros:\n6. Bold pros:\n7. Better choice (A or B):\n8. Why:`;
 
     try {
-      const text = await callGemini(prompt, systemPrompt);
-      setStreamText('');
-
-      console.log('=== RAW GEMINI RESPONSE ===');
-      console.log(text);
-      console.log('===========================');
+      let tokenCount = 0;
+      setTokenProgress(0);
+      const text = await callLocalLLM(prompt, () => {
+        tokenCount++;
+        setTokenProgress(tokenCount);
+        if (tokenCount % 20 === 0) setSimulatingMsg(SIMULATING_MESSAGES[Math.min(Math.floor(tokenCount / 20), SIMULATING_MESSAGES.length - 1)]);
+      });
+      setTokenProgress(0);
 
       const lines = text.split('\n').map(l => l.trim()).filter(l => l);
-
-      const extractAnswer = (questionNum: number): string => {
-        const line = lines.find(l =>
-          l.match(new RegExp(`^${questionNum}[\\.:\\)]`))
-        );
+      const ext = (num: number) => {
+        const line = lines.find(l => l.match(new RegExp(`^${num}[\\.:\\)]`)));
         if (!line) return '';
-        // Remove the number and label, get the value after the last colon
-        const afterNum = line.replace(/^\d+[\.\:\)]\s*/, '');
-        // If there's a colon (e.g. "Path A name: Steady Corporate Career"), grab after it
-        const colonIdx = afterNum.indexOf(':');
-        if (colonIdx !== -1) {
-          return afterNum.slice(colonIdx + 1).trim();
-        }
-        return afterNum.trim();
+        const after = line.replace(/^\d+[\.\:\)]\s*/, '');
+        const ci = after.indexOf(':');
+        return ci !== -1 ? after.slice(ci + 1).trim() : after.trim();
       };
 
-      const extractNumber = (questionNum: number, defaultVal: number): number => {
-        const answer = extractAnswer(questionNum);
-        const num = parseInt(answer.replace(/\D/g, ''));
-        return isNaN(num) ? defaultVal : Math.max(0, Math.min(100, num));
-      };
-
-      const extractScore = (questionNum: number, defaultVal: number): number => {
-        const answer = extractAnswer(questionNum);
-        const num = parseInt(answer.replace(/\D/g, ''));
-        return isNaN(num) ? defaultVal : Math.max(0, Math.min(10, num));
-      };
-
-      const extractRisk = (questionNum: number): 'Low' | 'Medium' | 'High' => {
-        const answer = extractAnswer(questionNum).toLowerCase();
-        if (answer.includes('low')) return 'Low';
-        if (answer.includes('high')) return 'High';
-        return 'Medium';
-      };
+      const safeSuccess = Math.max(40, 90 - scores.riskTolerance);
+      const boldSuccess = Math.min(80, 20 + scores.riskTolerance);
 
       const parsed: SimulationResults = {
         paths: [
-          {
-            title: '🛡️ ' + (extractAnswer(1) || 'Safe Path'),
-            year1: extractAnswer(2) || 'Steady progress, stable foundation building',
-            year5: extractAnswer(3) || 'Secure position, moderate advancement achieved',
-            year10: extractAnswer(4) || 'Established career, comfortable lifestyle maintained',
-            pros: extractAnswer(5) || 'Stability, predictability, low stress',
-            cons: extractAnswer(6) || 'Limited upside, slower growth',
-            successRate: extractNumber(7, 75),
-            financialScore: extractScore(8, 7),
-            happinessScore: extractScore(9, 7),
-            riskLevel: extractRisk(10),
-            timeInvestment: extractAnswer(11) || 'Moderate, sustainable pace',
-            regretRisk: extractNumber(12, 30),
-            keyInsight: extractAnswer(13) || 'Consistency compounds over time',
-          },
-          {
-            title: '🚀 ' + (extractAnswer(14) || 'Risky Path'),
-            year1: extractAnswer(15) || 'High volatility, rapid skill acquisition',
-            year5: extractAnswer(16) || 'Major breakthrough or valuable pivot',
-            year10: extractAnswer(17) || 'Significant success or unique expertise',
-            pros: extractAnswer(18) || 'High potential, independence, rapid growth',
-            cons: extractAnswer(19) || 'Uncertainty, stress, financial instability',
-            successRate: extractNumber(20, 45),
-            financialScore: extractScore(21, 5),
-            happinessScore: extractScore(22, 6),
-            riskLevel: extractRisk(23),
-            timeInvestment: extractAnswer(24) || 'High, demanding commitment required',
-            regretRisk: extractNumber(25, 50),
-            keyInsight: extractAnswer(26) || 'Risk brings opportunity and learning',
-          },
+          { title: ext(1) || 'The Safe Path', emoji: '\u{1F6E1}\u{FE0F}', year1: ext(2) || 'Steady progress', year5: 'Solid foundation, steady growth', year10: 'Established and comfortable', pros: ext(5) || 'Stability, predictability', cons: 'Limited upside, slower growth', successRate: safeSuccess, financialScore: Math.min(10, scores.financialBias + 2), happinessScore: Math.max(1, scores.happinessBias - 1), riskLevel: 'Low', keyInsight: ext(5) || 'Consistency compounds' },
+          { title: ext(3) || 'The Bold Path', emoji: '\u{1F525}', year1: ext(4) || 'High volatility', year5: 'Major breakthrough or pivot', year10: 'Unique expertise or big success', pros: ext(6) || 'Growth, independence', cons: 'Uncertainty, stress', successRate: boldSuccess, financialScore: Math.max(1, scores.financialBias - 1), happinessScore: Math.min(10, scores.happinessBias + 2), riskLevel: scores.riskTolerance > 60 ? 'Medium' : 'High', keyInsight: ext(6) || 'Risk brings opportunity' },
         ],
-        recommendation: {
-          winner: (extractAnswer(27).toUpperCase().includes('B') ? 'B' : 'A') as 'A' | 'B',
-          reason: extractAnswer(28) || 'Both paths offer unique value propositions',
-          confidenceScore: extractNumber(29, 65),
-        },
-        hiddenCosts: {
-          pathA: extractAnswer(30) || 'Opportunity cost of playing it safe',
-          pathB: extractAnswer(31) || 'Emotional toll of constant uncertainty',
-        },
+        recommendation: { winner: ext(7).toUpperCase().includes('B') ? 'B' : 'A', reason: ext(8) || 'Both paths have unique value', confidenceScore: Math.min(95, 50 + Math.abs(safeSuccess - boldSuccess)) },
+        hiddenCosts: { pathA: 'Opportunity cost of playing it safe', pathB: 'Emotional toll of constant uncertainty' },
       };
 
-      console.log('=== PARSED RESULT ===', parsed);
-      setResults(parsed);
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Failed to generate simulation';
-      setError(errorMsg);
-      setStreamText('');
-      console.error('Simulation error:', err);
-    } finally {
-      setSimulating(false);
-    }
-  }, [input]);
+      setResults(parsed); addXP(50); setPhase('reveal');
+    } catch (err) { setError(err instanceof Error ? err.message : 'Simulation failed'); setPhase('intro'); }
+  }, [loader, scenario, selectedCategory, addXP]);
 
-  const reset = useCallback(() => {
-    setResults(null);
-    setError(null);
-    setInput('');
-    setStreamText('');
+  runSimulationRef.current = runSimulation;
+
+  const handleAnswer = useCallback((value: string) => {
+    const newAnswers = [...answers, value]; setAnswers(newAnswers); addXP(15);
+    if (selectedCategory && currentQuestion < selectedCategory.questions.length - 1) {
+      setTimeout(() => setCurrentQuestion(prev => prev + 1), 300);
+    } else {
+      setTimeout(() => { setPhase('simulating'); runSimulationRef.current?.(newAnswers); }, 500);
+    }
+  }, [answers, currentQuestion, selectedCategory, addXP]);
+
+  // ─── Journey Handlers (NEW ENGINE) ────────────────────────────────────────
+
+  const handlePathChoice = useCallback((path: 'A' | 'B') => {
+    setChosenPath(path); addXP(25);
+    const pathData = results?.paths[path === 'A' ? 0 : 1];
+    const initial = createInitialState(path, pathData?.financialScore ?? 5, pathData?.happinessScore ?? 5);
+    setJourneyState(initial);
+    setJourneyStep(0);
+    setShowOutcome(null); setShowMilestone(null);
+
+    // Generate first checkpoint
+    const key = `${selectedCategory?.id}-${path === 'A' ? 'safe' : 'bold'}`;
+    const templates = checkpointTemplateMap[key] || checkpointTemplateMap['career-safe'];
+    const cp = generateCheckpoint(templates[0], initial, scenario, pathData?.title || 'Your Path');
+    setCurrentCheckpoint(cp);
+    setPhase('journey');
+  }, [addXP, selectedCategory, results, scenario]);
+
+  const handleJourneyChoice = useCallback((choice: CheckpointChoice) => {
+    if (!journeyState || !currentCheckpoint) return;
+    addXP(20);
+
+    const decision = { year: currentCheckpoint.year, choice: choice.label, impact: choice.impact, outcome: choice.outcome };
+    const newState = applyDecision(journeyState, decision, choice.milestone);
+    setJourneyState(newState);
+
+    // Show milestone toast
+    if (choice.milestone) {
+      setShowMilestone(choice.milestone);
+      setTimeout(() => setShowMilestone(null), 2500);
+    }
+
+    // Show outcome, then advance
+    setShowOutcome(choice.outcome);
+    setTimeout(() => {
+      setShowOutcome(null);
+      const key = `${selectedCategory?.id}-${chosenPath === 'A' ? 'safe' : 'bold'}`;
+      const templates = checkpointTemplateMap[key] || checkpointTemplateMap['career-safe'];
+      const nextStep = journeyStep + 1;
+
+      if (nextStep < templates.length) {
+        setJourneyStep(nextStep);
+        const pathData = results?.paths[chosenPath === 'A' ? 0 : 1];
+        const cp = generateCheckpoint(templates[nextStep], newState, scenario, pathData?.title || 'Your Path');
+        setCurrentCheckpoint(cp);
+      } else {
+        // Journey complete
+        addXP(50);
+        setAchievements(computeAchievements(newState, chosenPath || 'A'));
+        setPhase('summary');
+      }
+    }, 2200);
+  }, [journeyState, currentCheckpoint, journeyStep, selectedCategory, chosenPath, results, scenario, addXP]);
+
+  const restart = useCallback(() => {
+    setPhase('intro'); setSelectedCategory(null); setScenario(''); setCurrentQuestion(0);
+    setAnswers([]); setResults(null); setError(null); setChosenPath(null);
+    setJourneyState(null); setJourneyStep(0); setCurrentCheckpoint(null);
+    setShowOutcome(null); setShowMilestone(null); setAchievements([]);
   }, []);
 
-  const getScoreColor = (score: number) => {
-    if (score >= 8) return 'text-green-400';
-    if (score >= 5) return 'text-yellow-400';
-    return 'text-red-400';
-  };
-
-  const getRiskColor = (risk: string) => {
-    if (risk === 'Low') return 'text-green-400';
-    if (risk === 'Medium') return 'text-yellow-400';
-    return 'text-red-400';
-  };
+  // ─── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white p-6">
+    <div className="game-container">
+      <ParticleField />
+      <ModelBanner state={loader.state} progress={loader.progress} error={loader.error} onLoad={loader.ensure} label="Local LLM" />
 
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="text-center mb-10"
-      >
-        <h1 className="text-5xl font-extrabold bg-gradient-to-r from-purple-400 to-blue-500 text-transparent bg-clip-text">
-          Parallel You 🌌
-        </h1>
-        <p className="text-gray-400 mt-2">
-          Advanced AI-powered decision analysis with predictive metrics
-        </p>
-      </motion.div>
+      {phase !== 'intro' && (
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="game-hud">
+          <XPBar xp={xp} level={level} />
+          <AnimatePresence>
+            {showXpPopup && <motion.div className="xp-popup" initial={{ opacity: 0, y: 0, scale: 0.5 }} animate={{ opacity: 1, y: -20, scale: 1 }} exit={{ opacity: 0, y: -40 }}>+XP</motion.div>}
+          </AnimatePresence>
+        </motion.div>
+      )}
 
-      {/* Error Display */}
+      {/* Milestone Toast */}
       <AnimatePresence>
-        {error && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className="max-w-2xl mx-auto mb-6 bg-red-500/10 border border-red-500/30 rounded-2xl p-4 text-red-200"
-          >
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">⚠️</span>
-              <span>{error}</span>
-            </div>
+        {showMilestone && (
+          <motion.div className="milestone-toast" initial={{ opacity: 0, y: -30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }}>
+            {'\u{1F3C5}'} Milestone: {showMilestone}
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Input Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="max-w-2xl mx-auto mb-10"
-      >
-        <div className="bg-white/5 backdrop-blur-lg p-4 rounded-2xl border border-white/10 shadow-xl">
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder={`What if I chose a different path in life...
-
-Examples:
-• Should I stay at my job or start my own business?
-• Should I move abroad or stay in my hometown?
-• Should I pursue higher education or start working?`}
-            className="w-full p-4 rounded-xl bg-transparent border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-gray-500 min-h-[120px] resize-none"
-            disabled={simulating}
-          />
-          <button
-            onClick={generateSimulation}
-            disabled={simulating || !input.trim()}
-            className="mt-4 w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed py-3 rounded-xl font-semibold transition transform hover:scale-[1.02] active:scale-[0.98]"
-          >
-            {simulating ? (
-              <span className="flex items-center justify-center gap-2">
-                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                {streamText || 'Analyzing your future...'}
-              </span>
-            ) : (
-              '🧠 Run Advanced Analysis'
-            )}
-          </button>
-        </div>
-      </motion.div>
-
-      {/* Quick Examples */}
       <AnimatePresence>
-        {!results && !simulating && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="max-w-2xl mx-auto mb-10"
-          >
-            <h3 className="text-center text-sm text-gray-400 mb-4">Quick Examples:</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {[
-                { emoji: '💼', label: 'Career', prompt: 'Should I stay at my stable corporate job or quit and start my own business?' },
-                { emoji: '🏠', label: 'Housing', prompt: 'Should I buy a house now or keep renting and invest in stocks?' },
-                { emoji: '🌍', label: 'Travel', prompt: 'Should I move abroad for better opportunities or stay close to family?' },
-                { emoji: '🎓', label: 'Education', prompt: "Should I pursue a PhD or join the tech industry with a master's degree?" },
-              ].map((ex, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setInput(ex.prompt)}
-                  className="bg-white/5 hover:bg-white/10 border border-white/10 hover:border-purple-500/50 rounded-xl p-3 transition text-center"
-                >
-                  <div className="text-2xl mb-1">{ex.emoji}</div>
-                  <div className="text-xs text-gray-400">{ex.label}</div>
-                </button>
-              ))}
-            </div>
-          </motion.div>
-        )}
+        {error && <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="game-error" onClick={() => setError(null)}>{error} (tap to dismiss)</motion.div>}
       </AnimatePresence>
 
-      {/* Results */}
-      <AnimatePresence>
-        {results && (
-          <div className="max-w-7xl mx-auto">
-            {/* Decision Header */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center mb-8"
-            >
-              <p className="text-gray-400 mb-2">Your decision:</p>
-              <p className="text-xl font-semibold text-purple-400 mb-4">{input}</p>
+      <div className="game-content">
+        <AnimatePresence mode="wait">
+
+          {/* ── INTRO ─────────────────────────────────────────────────── */}
+          {phase === 'intro' && (
+            <motion.div key="intro" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="phase-intro">
+              <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }} className="intro-icon">{'\u{1F30C}'}</motion.div>
+              <h1 className="intro-title"><span className="intro-title-gradient">Parallel You</span></h1>
+              <p className="intro-subtitle">Every decision splits your universe into two.<br />Explore both timelines. Live the journey. Choose your destiny.</p>
+              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setPhase('category')} className="btn-game-primary"><span className="btn-game-glow" />Begin Simulation</motion.button>
+              <div className="intro-hint">Powered by on-device AI - no data leaves your browser</div>
             </motion.div>
+          )}
 
-            {/* AI Recommendation */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-6 mb-8"
-            >
-              <div className="text-center">
-                <h3 className="text-2xl font-bold mb-2">🎯 AI Recommendation</h3>
-                <p className="text-3xl font-bold text-purple-400 mb-2">
-                  Path {results.recommendation.winner}
-                </p>
-                <p className="text-gray-300 mb-3">{results.recommendation.reason}</p>
-                <div className="inline-flex items-center gap-2 bg-white/10 rounded-full px-4 py-2">
-                  <span className="text-sm text-gray-400">Confidence:</span>
-                  <span className="text-lg font-bold text-purple-400">{results.recommendation.confidenceScore}%</span>
-                </div>
+          {/* ── CATEGORY ──────────────────────────────────────────────── */}
+          {phase === 'category' && (
+            <motion.div key="category" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} className="phase-category">
+              <h2 className="phase-title">Choose Your Domain</h2>
+              <p className="phase-subtitle">What area of life are you wrestling with?</p>
+              <div className="category-grid">
+                {CATEGORIES.map((cat, i) => (
+                  <motion.button key={cat.id} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }} whileHover={{ scale: 1.04, y: -4 }} whileTap={{ scale: 0.97 }} onClick={() => handleCategorySelect(cat)} className="category-card">
+                    <div className={`category-card-bg bg-gradient-to-br ${cat.color}`} />
+                    <div className="category-card-content">
+                      <span className="category-emoji">{cat.emoji}</span>
+                      <span className="category-label">{cat.label}</span>
+                      <span className="category-tagline">{cat.tagline}</span>
+                    </div>
+                  </motion.button>
+                ))}
               </div>
             </motion.div>
+          )}
 
-            {/* Path Comparison */}
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
-              {results.paths.map((path, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.4 + index * 0.2 }}
-                  className={`bg-white/5 backdrop-blur-xl p-6 rounded-2xl border ${
-                    results.recommendation.winner === (index === 0 ? 'A' : 'B')
-                      ? 'border-purple-500/50 shadow-lg shadow-purple-500/20'
-                      : 'border-white/10'
-                  } hover:scale-[1.02] transition-transform`}
-                >
-                  {/* Header */}
-                  <div className="mb-6">
-                    <div className="flex items-center justify-between mb-2">
-                      <h2 className="text-2xl font-bold text-purple-400">{path.title}</h2>
-                      {results.recommendation.winner === (index === 0 ? 'A' : 'B') && (
-                        <span className="bg-purple-500 text-white text-xs px-3 py-1 rounded-full font-bold">
-                          RECOMMENDED
-                        </span>
-                      )}
-                    </div>
-                    <div className="text-sm text-gray-400 italic">{path.keyInsight}</div>
-                  </div>
+          {/* ── SCENARIO ──────────────────────────────────────────────── */}
+          {phase === 'scenario' && selectedCategory && (
+            <motion.div key="scenario" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} className="phase-scenario">
+              <div className="scenario-header"><span className="scenario-category-badge">{selectedCategory.emoji} {selectedCategory.label}</span></div>
+              <h2 className="phase-title">Describe Your Crossroads</h2>
+              <p className="phase-subtitle">What decision is keeping you up at night?</p>
 
-                  {/* Timeline */}
-                  <div className="space-y-3 mb-6">
-                    <div className="bg-white/5 p-3 rounded-xl">
-                      <div className="text-xs text-gray-400 mb-1">YEAR 1</div>
-                      <p className="text-sm">{path.year1}</p>
-                    </div>
-                    <div className="bg-white/5 p-3 rounded-xl">
-                      <div className="text-xs text-gray-400 mb-1">YEAR 5</div>
-                      <p className="text-sm">{path.year5}</p>
-                    </div>
-                    <div className="bg-white/5 p-3 rounded-xl">
-                      <div className="text-xs text-gray-400 mb-1">YEAR 10</div>
-                      <p className="text-sm">{path.year10}</p>
-                    </div>
-                  </div>
+              {/* Examples ABOVE textarea */}
+              <div className="scenario-examples">
+                <div className="scenario-examples-label">Try one:</div>
+                <div className="scenario-examples-grid">
+                  {(SCENARIO_EXAMPLES[selectedCategory.id] || []).map((ex, i) => (
+                    <motion.button key={i} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => setScenario(ex.text)} className={`scenario-example-btn ${scenario === ex.text ? 'scenario-example-active' : ''}`}>
+                      <span className="scenario-example-emoji">{ex.emoji}</span>
+                      <span className="scenario-example-text">{ex.label}</span>
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
 
-                  {/* Metrics Grid */}
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="bg-white/5 p-3 rounded-xl text-center">
-                      <div className="text-xs text-gray-400 mb-1">Success Rate</div>
-                      <div className={`text-2xl font-bold ${getScoreColor(path.successRate / 10)}`}>
-                        {path.successRate}%
-                      </div>
-                    </div>
-                    <div className="bg-white/5 p-3 rounded-xl text-center">
-                      <div className="text-xs text-gray-400 mb-1">Risk Level</div>
-                      <div className={`text-lg font-bold ${getRiskColor(path.riskLevel)}`}>
-                        {path.riskLevel}
-                      </div>
-                    </div>
-                    <div className="bg-white/5 p-3 rounded-xl text-center">
-                      <div className="text-xs text-gray-400 mb-1">Financial</div>
-                      <div className={`text-2xl font-bold ${getScoreColor(path.financialScore)}`}>
-                        {path.financialScore}/10
-                      </div>
-                    </div>
-                    <div className="bg-white/5 p-3 rounded-xl text-center">
-                      <div className="text-xs text-gray-400 mb-1">Happiness</div>
-                      <div className={`text-2xl font-bold ${getScoreColor(path.happinessScore)}`}>
-                        {path.happinessScore}/10
-                      </div>
-                    </div>
-                  </div>
+              <div className="scenario-input-wrapper">
+                <textarea value={scenario} onChange={(e) => setScenario(e.target.value)} placeholder="Or type your own decision..." className="scenario-input" autoFocus />
+                <div className="scenario-char-count">{scenario.length}/200</div>
+              </div>
 
-                  {/* Additional Metrics */}
-                  <div className="space-y-2 mb-6 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Time Investment:</span>
-                      <span className="font-semibold">{path.timeInvestment}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Regret Risk:</span>
-                      <span className={`font-semibold ${path.regretRisk > 60 ? 'text-red-400' : path.regretRisk > 30 ? 'text-yellow-400' : 'text-green-400'}`}>
-                        {path.regretRisk}%
-                      </span>
-                    </div>
-                  </div>
+              <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={handleScenarioSubmit} disabled={!scenario.trim()} className="btn-game-primary">Lock It In</motion.button>
+              <button onClick={() => setPhase('category')} className="btn-game-back">{'\u2190'} Back</button>
+            </motion.div>
+          )}
 
-                  {/* Pros & Cons */}
-                  <div className="space-y-2 text-sm border-t border-white/10 pt-4">
-                    <div className="flex items-start gap-2">
-                      <span className="text-green-400 font-bold">✓</span>
-                      <div>
-                        <div className="text-green-400 font-semibold mb-1">Pros</div>
-                        <p className="text-gray-300">{path.pros}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <span className="text-red-400 font-bold">✗</span>
-                      <div>
-                        <div className="text-red-400 font-semibold mb-1">Cons</div>
-                        <p className="text-gray-300">{path.cons}</p>
-                      </div>
-                    </div>
+          {/* ── QUESTIONS ─────────────────────────────────────────────── */}
+          {phase === 'questions' && selectedCategory && (
+            <motion.div key="questions" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} className="phase-questions">
+              <ProgressSteps current={currentQuestion} total={selectedCategory.questions.length} />
+              <div className="question-counter">Question {currentQuestion + 1} of {selectedCategory.questions.length}</div>
+              <AnimatePresence mode="wait">
+                <motion.div key={currentQuestion} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }} className="question-card">
+                  <h3 className="question-text">{selectedCategory.questions[currentQuestion].text}</h3>
+                  <div className="question-options">
+                    {selectedCategory.questions[currentQuestion].options.map((opt, i) => (
+                      <motion.button key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }} whileHover={{ scale: 1.03, x: 8 }} whileTap={{ scale: 0.97 }} onClick={() => handleAnswer(opt.value)} className="option-btn">
+                        <span className="option-emoji">{opt.emoji}</span><span className="option-label">{opt.label}</span><span className="option-arrow">{'\u203A'}</span>
+                      </motion.button>
+                    ))}
                   </div>
                 </motion.div>
-              ))}
-            </div>
+              </AnimatePresence>
+            </motion.div>
+          )}
 
-            {/* Hidden Costs */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8 }}
-              className="bg-orange-600/10 border border-orange-500/30 rounded-2xl p-6 mb-8"
-            >
-              <h3 className="text-xl font-bold mb-4 text-orange-400">⚠️ Hidden Costs</h3>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <div className="text-sm font-semibold text-gray-400 mb-1">Path A:</div>
-                  <p className="text-sm">{results.hiddenCosts.pathA}</p>
+          {/* ── SIMULATING ────────────────────────────────────────────── */}
+          {phase === 'simulating' && (
+            <motion.div key="simulating" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="phase-simulating">
+              <div className="sim-portal">
+                <div className="sim-ring sim-ring-1" /><div className="sim-ring sim-ring-2" /><div className="sim-ring sim-ring-3" />
+                <div className="sim-core">{'\u{1F30C}'}</div>
+              </div>
+              <motion.p key={simulatingMsg} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="sim-message">{simulatingMsg}</motion.p>
+              {/* Branching animation */}
+              <div className="sim-branches">
+                <div className="sim-branch sim-branch-a" /><div className="sim-branch sim-branch-b" />
+                <span className="sim-branch-label sim-branch-label-a">Safe</span><span className="sim-branch-label sim-branch-label-b">Bold</span>
+              </div>
+              {tokenProgress > 0 && (
+                <div className="sim-progress-section">
+                  <div className="sim-token-bar-track"><motion.div className="sim-token-bar-fill" animate={{ width: `${Math.min(100, (tokenProgress / 200) * 100)}%` }} transition={{ duration: 0.3 }} /></div>
+                  <div className="sim-token-count">{tokenProgress} / ~200 tokens</div>
                 </div>
-                <div>
-                  <div className="text-sm font-semibold text-gray-400 mb-1">Path B:</div>
-                  <p className="text-sm">{results.hiddenCosts.pathB}</p>
+              )}
+              {tokenProgress === 0 && (
+                <div className="sim-waiting">{loader.state === 'loading' ? `Loading AI model... ${Math.round((loader.progress || 0) * 100)}%` : 'Preparing quantum simulation...'}</div>
+              )}
+              {streamSnippet && <div className="sim-stream-preview">{streamSnippet}</div>}
+              <div className="sim-dots"><span className="sim-dot" /><span className="sim-dot" /><span className="sim-dot" /></div>
+            </motion.div>
+          )}
+
+          {/* ── REVEAL ────────────────────────────────────────────────── */}
+          {phase === 'reveal' && results && (
+            <motion.div key="reveal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="phase-reveal">
+              <motion.h2 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="reveal-title">Two Timelines Diverge</motion.h2>
+              <p className="reveal-subtitle">Your decision: <em>{scenario}</em></p>
+
+              <div className="paths-container">
+                {results.paths.map((path, index) => {
+                  const pathLetter = index === 0 ? 'A' : 'B';
+                  const isRec = results.recommendation.winner === pathLetter;
+                  return (
+                    <motion.div key={index} initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 + index * 0.3 }} className={`path-card ${isRec ? 'path-recommended' : ''}`}>
+                      {isRec && <div className="path-badge">AI PICK</div>}
+                      <div className="path-header">
+                        <span className="path-emoji">{path.emoji}</span>
+                        <div><div className="path-letter">Path {pathLetter}</div><h3 className="path-title">{path.title}</h3></div>
+                      </div>
+
+                      {/* Identity statement */}
+                      <div className="reveal-identity">
+                        <div className="reveal-identity-text">
+                          {index === 0 ? 'You become someone who values stability and builds on certainty' : 'You become a risk-taker who bets on themselves'}
+                        </div>
+                      </div>
+
+                      {/* Stats */}
+                      <div className="stats-grid">
+                        <div className="stat-item"><div className="stat-value stat-success">{path.successRate}%</div><div className="stat-label">Success</div></div>
+                        <div className="stat-item"><div className={`stat-value ${path.riskLevel === 'Low' ? 'stat-low' : path.riskLevel === 'High' ? 'stat-high' : 'stat-med'}`}>{path.riskLevel}</div><div className="stat-label">Risk</div></div>
+                        <div className="stat-item"><div className="stat-value">{path.financialScore}/10</div><div className="stat-label">Finance</div></div>
+                        <div className="stat-item"><div className="stat-value">{path.happinessScore}/10</div><div className="stat-label">Joy</div></div>
+                      </div>
+
+                      {/* Tradeoffs */}
+                      <div className="reveal-tradeoff">
+                        <div className="reveal-gained"><span className="reveal-tradeoff-label">You gain</span>{path.pros}</div>
+                        <div className="reveal-sacrificed"><span className="reveal-tradeoff-label">You sacrifice</span>{path.cons}</div>
+                      </div>
+
+                      {/* Timeline */}
+                      <div className="timeline">
+                        {[{ y: 'Year 1', t: path.year1 }, { y: 'Year 5', t: path.year5 }, { y: 'Year 10', t: path.year10 }].map((item, ti) => (
+                          <div key={ti} className="timeline-item"><div className="timeline-dot" /><div className="timeline-content"><span className="timeline-year">{item.y}</span><span className="timeline-text">{item.t}</span></div></div>
+                        ))}
+                      </div>
+
+                      <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => handlePathChoice(pathLetter)} className={`btn-choose-path ${isRec ? 'btn-choose-recommended' : ''}`}>
+                        Choose This Path {'\u2192'}
+                      </motion.button>
+                    </motion.div>
+                  );
+                })}
+              </div>
+
+              {/* AI Confidence */}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }} className="ai-rec">
+                <div className="ai-rec-label">{'\u{1F3AF}'} AI Confidence</div>
+                <div className="ai-rec-bar-track"><motion.div className="ai-rec-bar-fill" initial={{ width: 0 }} animate={{ width: `${results.recommendation.confidenceScore}%` }} transition={{ delay: 1.3, duration: 1 }} /></div>
+                <div className="ai-rec-score">{results.recommendation.confidenceScore}%</div>
+                <p className="ai-rec-reason">{results.recommendation.reason}</p>
+              </motion.div>
+            </motion.div>
+          )}
+
+          {/* ── JOURNEY (Dynamic Engine) ──────────────────────────────── */}
+          {phase === 'journey' && journeyState && currentCheckpoint && (
+            <motion.div key="journey" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="phase-journey">
+              {/* Header */}
+              <div className="journey-header">
+                <div className="journey-path-badge">
+                  {chosenPath === 'A' ? '\u{1F6E1}\u{FE0F}' : '\u{1F525}'} {results?.paths[chosenPath === 'A' ? 0 : 1].title}
                 </div>
+                <div className="journey-year-indicator">Year {currentCheckpoint.year} of 10</div>
+              </div>
+
+              {/* Timeline Progress */}
+              <div className="journey-timeline-bar">
+                {[1, 3, 5, 7, 10].map((yr, i) => (
+                  <div key={yr} className={`journey-timeline-dot ${i < journeyStep ? 'jt-done' : ''} ${i === journeyStep ? 'jt-current' : ''}`}>
+                    <span className="jt-year">Y{yr}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* 5 Live Stats */}
+              <div className="journey-stats">
+                {([
+                    { label: 'Wealth', value: journeyState.stats.wealth, emoji: '\u{1F4B0}' },
+                    { label: 'Happiness', value: journeyState.stats.happiness, emoji: '\u{1F60A}' },
+                    { label: 'Health', value: journeyState.stats.health, emoji: '\u{1F49A}' },
+                    { label: 'Relations', value: journeyState.stats.relationships, emoji: '\u{1F465}' },
+                    { label: 'Risk', value: journeyState.stats.risk, emoji: '\u{26A0}\u{FE0F}' },
+                  ]).map(bar => (
+                  <div key={bar.label} className="jstat">
+                    <div className="jstat-bar" style={{ '--val': `${bar.value}%` } as React.CSSProperties}>
+                      <div className={`jstat-fill jstat-${bar.label.toLowerCase()}`} />
+                    </div>
+                    <span className="jstat-label">{bar.emoji} {bar.value}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Outcome popup */}
+              <AnimatePresence>
+                {showOutcome && (
+                  <motion.div initial={{ opacity: 0, y: 20, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20 }} className="journey-outcome">
+                    {'\u2728'} {showOutcome}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Checkpoint card */}
+              {!showOutcome && (
+                <AnimatePresence mode="wait">
+                  <motion.div key={journeyStep} initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -40 }} className={`journey-card ${currentCheckpoint.turningPoint ? 'turning-point' : ''}`}>
+
+                    {/* Narrative Bridge */}
+                    {currentCheckpoint.narrativeBridge && (
+                      <div className="journey-bridge">
+                        {journeyState.decisions.length > 0 && (
+                          <div className="journey-bridge-prev">Previously...</div>
+                        )}
+                        <div className="journey-bridge-text">{currentCheckpoint.narrativeBridge}</div>
+                      </div>
+                    )}
+
+                    {/* Turning point badge */}
+                    {currentCheckpoint.turningPoint && (
+                      <div className="turning-point-badge">{'\u{26A0}\u{FE0F}'} TURNING POINT</div>
+                    )}
+
+                    <h3 className="journey-card-title">{currentCheckpoint.title}</h3>
+                    <p className="journey-card-scenario">{currentCheckpoint.scenario}</p>
+
+                    <div className="journey-options">
+                      {currentCheckpoint.choices.map((opt, i) => (
+                        <motion.button key={i} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + i * 0.1 }} whileHover={{ scale: 1.02, x: 6 }} whileTap={{ scale: 0.98 }} onClick={() => handleJourneyChoice(opt)} className="journey-option-btn">
+                          <span className="journey-opt-emoji">{opt.emoji}</span>
+                          <span className="journey-opt-label">{opt.label}</span>
+                          <div className="journey-opt-effects">
+                            {Object.entries(opt.impact).filter(([, v]) => v !== 0).slice(0, 3).map(([k, v]) => (
+                              <span key={k} className={(v as number) > 0 ? 'je-pos' : 'je-neg'}>
+                                {(v as number) > 0 ? '+' : ''}{v}
+                              </span>
+                            ))}
+                          </div>
+                        </motion.button>
+                      ))}
+                    </div>
+
+                    {currentCheckpoint.turningPoint && (
+                      <div className="turning-point-warning">This decision will define the rest of your journey. No going back.</div>
+                    )}
+                  </motion.div>
+                </AnimatePresence>
+              )}
+            </motion.div>
+          )}
+
+          {/* ── SUMMARY (Life Report) ─────────────────────────────────── */}
+          {phase === 'summary' && results && chosenPath && journeyState && (
+            <motion.div key="summary" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="phase-summary">
+              <motion.div animate={{ scale: [1, 1.15, 1] }} transition={{ duration: 0.8 }} className="summary-icon">{'\u{1F3C6}'}</motion.div>
+              <h2 className="summary-title">Journey Complete</h2>
+              <p className="summary-path">{chosenPath === 'A' ? '\u{1F6E1}\u{FE0F}' : '\u{1F525}'} {results.paths[chosenPath === 'A' ? 0 : 1].title}</p>
+
+              {/* Life Story */}
+              <div className="summary-life-story">
+                {generateLifeStory(journeyState, scenario, results.paths[chosenPath === 'A' ? 0 : 1].title, selectedCategory?.label || 'Life')}
+              </div>
+
+              {/* Final Stats */}
+              <div className="summary-stats-grid">
+                {([
+                    { label: 'Wealth', value: journeyState.stats.wealth, emoji: '\u{1F4B0}' },
+                    { label: 'Happiness', value: journeyState.stats.happiness, emoji: '\u{1F60A}' },
+                    { label: 'Health', value: journeyState.stats.health, emoji: '\u{1F49A}' },
+                    { label: 'Relations', value: journeyState.stats.relationships, emoji: '\u{1F465}' },
+                    { label: 'Risk', value: journeyState.stats.risk, emoji: '\u{26A0}\u{FE0F}' },
+                  ]).map(bar => (
+                  <div key={bar.label} className="summary-stat">
+                    <div className="summary-stat-value">{bar.value}</div>
+                    <div className="summary-stat-label">{bar.emoji} {bar.label}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Stat Evolution */}
+              {journeyState.statHistory.length > 1 && (
+                <div className="summary-stat-evolution">
+                  <div className="summary-log-title">Stat Evolution</div>
+                  {journeyState.statHistory.map((snap, i) => (
+                    <div key={i} className="stat-evolution-row">
+                      <span className="stat-evo-year">{i === 0 ? 'Start' : `Y${[1, 3, 5, 7, 10][i - 1] || '?'}`}</span>
+                      <div className="stat-evo-bars">
+                        {[
+                          { key: 'wealth', val: snap.wealth, cls: 'evo-wealth' },
+                          { key: 'happy', val: snap.happiness, cls: 'evo-happiness' },
+                          { key: 'health', val: snap.health, cls: 'evo-health' },
+                        ].map(b => (
+                          <div key={b.key} className="stat-evo-bar">
+                            <div className="stat-evo-track"><div className={`stat-evo-fill ${b.cls}`} style={{ width: `${b.val}%` }} /></div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Journey Log */}
+              <div className="summary-log">
+                <h4 className="summary-log-title">Your Journey</h4>
+                {journeyState.decisions.map((entry, i) => (
+                  <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.12 }} className="summary-log-entry">
+                    <div className="slog-year">Year {entry.year}</div>
+                    <div className="slog-choice">{entry.choice}</div>
+                    <div className="slog-outcome">{entry.outcome}</div>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Alternate Reality */}
+              {results && (
+                <div className="summary-whatif">
+                  <div className="summary-whatif-title">{'\u{1F30C}'} The Road Not Taken</div>
+                  <p className="summary-whatif-path">In another universe, you chose <strong>{results.paths[chosenPath === 'A' ? 1 : 0].title}</strong></p>
+                  <div className="summary-whatif-timeline">
+                    <div className="summary-whatif-year"><strong>Year 1:</strong> {results.paths[chosenPath === 'A' ? 1 : 0].year1}</div>
+                    <div className="summary-whatif-year"><strong>Year 5:</strong> {results.paths[chosenPath === 'A' ? 1 : 0].year5}</div>
+                    <div className="summary-whatif-year"><strong>Year 10:</strong> {results.paths[chosenPath === 'A' ? 1 : 0].year10}</div>
+                  </div>
+                </div>
+              )}
+
+              {/* Achievements */}
+              {achievements.length > 0 && (
+                <div className="summary-achievements">
+                  <div className="summary-achievements-title">{'\u{1F3C5}'} Achievements Unlocked</div>
+                  <div className="achievements-grid">
+                    {achievements.map(a => (
+                      <motion.div key={a.id} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 }} className="achievement-badge">
+                        <span className="achievement-emoji">{a.emoji}</span>
+                        <span>{a.label}<span className="achievement-desc">{a.description}</span></span>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* XP */}
+              <div className="summary-xp">
+                <div className="summary-xp-badge">{'\u{1F3C6}'} {xp} XP Earned</div>
+                <div className="summary-level">Level {level} Decision Maker</div>
+              </div>
+
+              <div className="summary-actions">
+                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={restart} className="btn-game-primary">{'\u{1F504}'} New Simulation</motion.button>
+                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setPhase('reveal')} className="btn-game-secondary">{'\u2190'} Review Paths</motion.button>
               </div>
             </motion.div>
+          )}
 
-            {/* Reset Button */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1 }}
-              className="text-center"
-            >
-              <button
-                onClick={reset}
-                className="bg-white/5 hover:bg-white/10 border border-white/10 hover:border-purple-500/50 px-8 py-3 rounded-xl transition"
-              >
-                ← Analyze Another Decision
-              </button>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
