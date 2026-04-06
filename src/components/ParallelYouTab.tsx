@@ -7,13 +7,95 @@ import { ModelBanner } from './ModelBanner';
 import { initSDK } from '../runanywhere';
 import {
   type JourneyState, type GeneratedCheckpoint, type CheckpointChoice, type Achievement,
+  type CheckpointTemplate, type JourneyDecision,
   createInitialState, applyDecision, generateCheckpoint, computeAchievements,
   generateLifeStory, checkpointTemplateMap,
 } from '../engine/journeyEngine';
+import {
+  initAudio, playClick, playXP, playMilestone, playTurningPoint,
+  playReveal, playDecision, playAmbient, stopAmbient,
+} from '../engine/soundEngine';
+
+// ─── Persistence ─────────────────────────────────────────────────────────────
+
+interface SavedJourney {
+  id: string;
+  date: string;
+  category: string;
+  scenario: string;
+  pathTitle: string;
+  pathType: 'A' | 'B';
+  finalStats: { wealth: number; happiness: number; health: number; relationships: number; risk: number };
+  xp: number;
+  level: number;
+  achievements: string[];
+  lifeStory: string;
+  decisions: { year: number; choice: string; outcome: string; impact?: Record<string, number> }[];
+  // Replay fields (new journeys only)
+  categoryId?: string;
+  choiceIndices?: number[];
+  financialScore?: number;
+  happinessScore?: number;
+  replayable?: boolean;
+  forkedFrom?: string;
+}
+
+function loadSavedJourneys(): SavedJourney[] {
+  try {
+    return JSON.parse(localStorage.getItem('parallelYou_journeys') || '[]');
+  } catch { return []; }
+}
+
+function saveJourney(journey: SavedJourney) {
+  const all = loadSavedJourneys();
+  all.unshift(journey);
+  if (all.length > 20) all.length = 20;
+  localStorage.setItem('parallelYou_journeys', JSON.stringify(all));
+}
+
+function loadPlayerStats(): { totalXP: number; totalJourneys: number; highestLevel: number } {
+  try {
+    return JSON.parse(localStorage.getItem('parallelYou_player') || '{"totalXP":0,"totalJourneys":0,"highestLevel":1}');
+  } catch { return { totalXP: 0, totalJourneys: 0, highestLevel: 1 }; }
+}
+
+function savePlayerStats(xp: number, level: number) {
+  const prev = loadPlayerStats();
+  localStorage.setItem('parallelYou_player', JSON.stringify({
+    totalXP: prev.totalXP + xp,
+    totalJourneys: prev.totalJourneys + 1,
+    highestLevel: Math.max(prev.highestLevel, level),
+  }));
+}
+
+function generateShareText(
+  scenario: string, pathTitle: string, pathType: 'A' | 'B',
+  stats: { wealth: number; happiness: number; health: number; relationships: number },
+  achievements: Achievement[], lifeStory: string, xp: number, level: number,
+): string {
+  const ach = achievements.map(a => `${a.emoji} ${a.label}`).join(', ');
+  return `Parallel You - Life Simulator
+
+Decision: "${scenario}"
+Path: ${pathType === 'A' ? 'Safe' : 'Bold'} - ${pathTitle}
+
+Final Stats:
+  Wealth: ${stats.wealth}/100
+  Happiness: ${stats.happiness}/100
+  Health: ${stats.health}/100
+  Relationships: ${stats.relationships}/100
+
+${lifeStory}
+
+Achievements: ${ach || 'None'}
+XP: ${xp} | Level ${level}
+
+Try it yourself: ${window.location.href}`;
+}
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-type Phase = 'intro' | 'category' | 'scenario' | 'questions' | 'simulating' | 'reveal' | 'journey' | 'summary';
+type Phase = 'intro' | 'category' | 'scenario' | 'questions' | 'simulating' | 'reveal' | 'journey' | 'summary' | 'replay';
 
 interface Category {
   id: string;
@@ -318,6 +400,152 @@ function ProgressSteps({ current, total }: { current: number; total: number }) {
   );
 }
 
+// ─── Typewriter Text ─────────────────────────────────────────────────────────
+
+function TypewriterText({ text, speed = 40, onDone }: { text: string; speed?: number; onDone?: () => void }) {
+  const [displayed, setDisplayed] = useState('');
+  const idxRef = useRef(0);
+  useEffect(() => {
+    setDisplayed('');
+    idxRef.current = 0;
+    const iv = setInterval(() => {
+      idxRef.current++;
+      setDisplayed(text.slice(0, idxRef.current));
+      if (idxRef.current >= text.length) { clearInterval(iv); onDone?.(); }
+    }, speed);
+    return () => clearInterval(iv);
+  }, [text, speed, onDone]);
+  return <span>{displayed}<span className="typewriter-cursor">|</span></span>;
+}
+
+// ─── Landing Typewriter ─────────────────────────────────────────────────────
+
+function LandingTypewriter({ phrases, typeSpeed = 50, eraseSpeed = 30, pauseMs = 2000 }: {
+  phrases: string[];
+  typeSpeed?: number;
+  eraseSpeed?: number;
+  pauseMs?: number;
+}) {
+  const [displayed, setDisplayed] = useState('');
+  const phraseRef = useRef(0);
+  const charRef = useRef(0);
+  const modeRef = useRef<'typing' | 'pausing' | 'erasing'>('typing');
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+
+    function tick() {
+      const phrase = phrases[phraseRef.current];
+
+      if (modeRef.current === 'typing') {
+        charRef.current++;
+        setDisplayed(phrase.slice(0, charRef.current));
+        if (charRef.current >= phrase.length) {
+          modeRef.current = 'pausing';
+          timer = setTimeout(tick, pauseMs);
+        } else {
+          timer = setTimeout(tick, typeSpeed);
+        }
+      } else if (modeRef.current === 'pausing') {
+        modeRef.current = 'erasing';
+        timer = setTimeout(tick, eraseSpeed);
+      } else {
+        charRef.current--;
+        setDisplayed(phrase.slice(0, charRef.current));
+        if (charRef.current <= 0) {
+          modeRef.current = 'typing';
+          phraseRef.current = (phraseRef.current + 1) % phrases.length;
+          timer = setTimeout(tick, typeSpeed);
+        } else {
+          timer = setTimeout(tick, eraseSpeed);
+        }
+      }
+    }
+
+    modeRef.current = 'typing';
+    charRef.current = 0;
+    phraseRef.current = 0;
+    setDisplayed('');
+    timer = setTimeout(tick, typeSpeed);
+    return () => clearTimeout(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <span className="landing-typewriter-text">
+      {displayed}<span className="typewriter-cursor">|</span>
+    </span>
+  );
+}
+
+// ─── Parallel Timeline ──────────────────────────────────────────────────────
+
+function ParallelTimeline({
+  chosenDecisions,
+  otherTemplates,
+  chosenTitle,
+  otherTitle,
+  chosenEmoji,
+  otherEmoji,
+}: {
+  chosenDecisions: JourneyDecision[];
+  otherTemplates: CheckpointTemplate[];
+  chosenTitle: string;
+  otherTitle: string;
+  chosenEmoji: string;
+  otherEmoji: string;
+}) {
+  const yearLabels = ['Year 1', 'Year 3', 'Year 5', 'Year 7', 'Year 10'];
+
+  return (
+    <div className="parallel-timeline">
+      <div className="parallel-timeline-lane chosen-lane">
+        <div className="parallel-timeline-header">{chosenEmoji} Your Path: {chosenTitle}</div>
+        <div className="parallel-timeline-track">
+          {chosenDecisions.map((d, i) => (
+            <motion.div key={i} className="parallel-timeline-node" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.15 }}>
+              <div className="parallel-timeline-year">{yearLabels[i] || `Year ${d.year}`}</div>
+              <div className="parallel-timeline-dot" />
+              <div className="parallel-timeline-event">{d.choice}</div>
+              <div className="parallel-timeline-impacts">
+                {d.impact && Object.entries(d.impact).map(([key, val]) => (
+                  <span key={key} className={`parallel-timeline-badge ${(val as number) > 0 ? 'positive' : (val as number) < 0 ? 'negative' : 'neutral'}`}>
+                    {key === 'wealth' ? '\u{1F4B0}' : key === 'happiness' ? '\u{1F60A}' : '\u{1F3CB}'}{(val as number) > 0 ? '+' : ''}{val as number}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {otherTemplates.length > 0 && (
+        <div className="parallel-timeline-lane other-lane">
+          <div className="parallel-timeline-header">{otherEmoji} Alternate: {otherTitle}</div>
+          <div className="parallel-timeline-track">
+            {otherTemplates.map((t, i) => (
+              <motion.div key={i} className="parallel-timeline-node" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 + i * 0.15 }}>
+                <div className="parallel-timeline-year">{yearLabels[i] || `Year ${i + 1}`}</div>
+                <div className="parallel-timeline-dot other-dot" />
+                <div className="parallel-timeline-event">{t.title}</div>
+                {t.choices[0] && (
+                  <div className="parallel-timeline-impacts">
+                    {Object.entries(t.choices[0].impact).map(([key, val]) => (
+                      <span key={key} className={`parallel-timeline-badge ${val > 0 ? 'positive' : val < 0 ? 'negative' : 'neutral'}`}>
+                        {key === 'wealth' ? '\u{1F4B0}' : key === 'happiness' ? '\u{1F60A}' : '\u{1F3CB}'}{val > 0 ? '+' : ''}{val}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Main Component ──────────────────────────────────────────────────────────
 
 export function ParallelYouTab() {
@@ -329,6 +557,7 @@ export function ParallelYouTab() {
   const [scenario, setScenario] = useState('');
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
+  const [customAnswer, setCustomAnswer] = useState('');
   const [xp, setXp] = useState(0);
   const [level, setLevel] = useState(1);
   const [results, setResults] = useState<SimulationResults | null>(null);
@@ -338,6 +567,9 @@ export function ParallelYouTab() {
   const [tokenProgress, setTokenProgress] = useState(0);
   const [chosenPath, setChosenPath] = useState<'A' | 'B' | null>(null);
   const [showXpPopup, setShowXpPopup] = useState(false);
+  const [xpAmount, setXpAmount] = useState(0);
+  const [streak, setStreak] = useState(0);
+  const [journeyConfidence, setJourneyConfidence] = useState('');
   const simulatingRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const runSimulationRef = useRef<((answers: string[]) => Promise<void>) | null>(null);
 
@@ -349,7 +581,27 @@ export function ParallelYouTab() {
   const [showMilestone, setShowMilestone] = useState<string | null>(null);
   const [achievements, setAchievements] = useState<Achievement[]>([]);
 
+  // Replay & fork state
+  const [replayJourney, setReplayJourney] = useState<SavedJourney | null>(null);
+  const [choiceIndices, setChoiceIndices] = useState<number[]>([]);
+  const [savedScores, setSavedScores] = useState({ financial: 5, happiness: 5 });
+
+  // Background LLM insight (runs during journey, shows at summary)
+  const [bgInsight, setBgInsight] = useState<string | null>(null);
+  const bgInsightRef = useRef(false);
+
+  // Game feel state
+  const [shaking, setShaking] = useState(false);
+  const [darkTransition, setDarkTransition] = useState(false);
+  const [playerName, setPlayerName] = useState<string>(() => localStorage.getItem('parallelYou_name') || '');
+
+  // Persistence
+  const [pastJourneys, setPastJourneys] = useState<SavedJourney[]>([]);
+  const [playerStats, setPlayerStats] = useState(loadPlayerStats());
+  const [shareStatus, setShareStatus] = useState<'idle' | 'copied'>('idle');
+
   useEffect(() => { initSDK().catch(console.error); }, []);
+  useEffect(() => { setPastJourneys(loadSavedJourneys()); }, []);
 
   // Cycle simulating messages
   useEffect(() => {
@@ -361,19 +613,35 @@ export function ParallelYouTab() {
     }
   }, [phase]);
 
+  const triggerShake = useCallback(() => {
+    setShaking(true);
+    setTimeout(() => setShaking(false), 400);
+  }, []);
+
+  const triggerDarkTransition = useCallback((duration = 800) => {
+    setDarkTransition(true);
+    setTimeout(() => setDarkTransition(false), duration);
+  }, []);
+
   const addXP = useCallback((amount: number) => {
-    setXp(prev => { const next = prev + amount; setLevel(Math.floor(next / 100) + 1); return next; });
+    setXpAmount(amount);
+    setXp(prev => {
+      const next = prev + amount;
+      setLevel(Math.floor(next / 100) + 1);
+      return next;
+    });
     setShowXpPopup(true);
-    setTimeout(() => setShowXpPopup(false), 1000);
+    playXP();
+    setTimeout(() => setShowXpPopup(false), 1200);
   }, []);
 
   const handleCategorySelect = useCallback((cat: Category) => {
-    setSelectedCategory(cat); addXP(20); setTimeout(() => setPhase('scenario'), 400);
-  }, [addXP]);
+    setSelectedCategory(cat); playClick(); setTimeout(() => setPhase('scenario'), 800);
+  }, []);
 
   const handleScenarioSubmit = useCallback(() => {
-    if (!scenario.trim()) return; addXP(30); setCurrentQuestion(0); setAnswers([]); setTimeout(() => setPhase('questions'), 400);
-  }, [scenario, addXP]);
+    if (!scenario.trim()) return; playDecision(); setCurrentQuestion(0); setAnswers([]); setTimeout(() => setPhase('questions'), 800);
+  }, [scenario]);
 
   // Pre-load model during questions
   useEffect(() => { if (phase === 'questions' && loader.state === 'idle') loader.ensure().catch(() => {}); }, [phase, loader]);
@@ -416,30 +684,48 @@ export function ParallelYouTab() {
         hiddenCosts: { pathA: 'Opportunity cost of playing it safe', pathB: 'Emotional toll of constant uncertainty' },
       };
 
-      setResults(parsed); addXP(50); setPhase('reveal');
+      stopAmbient(); setResults(parsed); playReveal(); triggerShake(); setPhase('reveal');
     } catch (err) { setError(err instanceof Error ? err.message : 'Simulation failed'); setPhase('intro'); }
-  }, [loader, scenario, selectedCategory, addXP]);
+  }, [loader, scenario, selectedCategory]);
 
   runSimulationRef.current = runSimulation;
 
   const handleAnswer = useCallback((value: string) => {
-    const newAnswers = [...answers, value]; setAnswers(newAnswers); addXP(15);
+    const newAnswers = [...answers, value]; setAnswers(newAnswers);
+    setCustomAnswer('');
+    playClick();
     if (selectedCategory && currentQuestion < selectedCategory.questions.length - 1) {
       setTimeout(() => setCurrentQuestion(prev => prev + 1), 300);
     } else {
-      setTimeout(() => { setPhase('simulating'); runSimulationRef.current?.(newAnswers); }, 500);
+      // Dark transition into simulation
+      triggerDarkTransition(1000);
+      setTimeout(() => { playAmbient(); setPhase('simulating'); runSimulationRef.current?.(newAnswers); }, 1000);
     }
-  }, [answers, currentQuestion, selectedCategory, addXP]);
+  }, [answers, currentQuestion, selectedCategory, triggerDarkTransition]);
+
+  const goBackQuestion = useCallback(() => {
+    setCustomAnswer('');
+    if (currentQuestion > 0) {
+      setCurrentQuestion(prev => prev - 1);
+      setAnswers(prev => prev.slice(0, -1));
+    } else {
+      setPhase('scenario');
+    }
+  }, [currentQuestion]);
 
   // ─── Journey Handlers (NEW ENGINE) ────────────────────────────────────────
 
   const handlePathChoice = useCallback((path: 'A' | 'B') => {
-    setChosenPath(path); addXP(25);
+    setChosenPath(path); playDecision(); triggerShake();
     const pathData = results?.paths[path === 'A' ? 0 : 1];
-    const initial = createInitialState(path, pathData?.financialScore ?? 5, pathData?.happinessScore ?? 5);
+    const fScore = pathData?.financialScore ?? 5;
+    const hScore = pathData?.happinessScore ?? 5;
+    setSavedScores({ financial: fScore, happiness: hScore });
+    setChoiceIndices([]);
+    const initial = createInitialState(path, fScore, hScore);
     setJourneyState(initial);
     setJourneyStep(0);
-    setShowOutcome(null); setShowMilestone(null);
+    setShowOutcome(null); setShowMilestone(null); setBgInsight(null);
 
     // Generate first checkpoint
     const key = `${selectedCategory?.id}-${path === 'A' ? 'safe' : 'bold'}`;
@@ -447,11 +733,28 @@ export function ParallelYouTab() {
     const cp = generateCheckpoint(templates[0], initial, scenario, pathData?.title || 'Your Path');
     setCurrentCheckpoint(cp);
     setPhase('journey');
-  }, [addXP, selectedCategory, results, scenario]);
+
+    // Background LLM: generate a personalized insight while user plays
+    if (!bgInsightRef.current) {
+      bgInsightRef.current = true;
+      const bgPrompt = `In 2 sentences, give personal advice for someone who chose the ${path === 'A' ? 'safe' : 'bold'} path on: "${scenario}"`;
+      callLocalLLM(bgPrompt).then(text => {
+        setBgInsight(text.trim().slice(0, 200));
+        bgInsightRef.current = false;
+      }).catch(() => { bgInsightRef.current = false; });
+    }
+  }, [selectedCategory, results, scenario]);
 
   const handleJourneyChoice = useCallback((choice: CheckpointChoice) => {
     if (!journeyState || !currentCheckpoint) return;
-    addXP(20);
+    // Track choice index for replay
+    const cIdx = Math.max(0, currentCheckpoint.choices.indexOf(choice));
+    setChoiceIndices(prev => [...prev, cIdx]);
+    // Sound based on context
+    if (currentCheckpoint.turningPoint) { playTurningPoint(); triggerShake(); }
+    else if (choice.milestone) { playMilestone(); }
+    else { playClick(); }
+    setJourneyConfidence('');
 
     const decision = { year: currentCheckpoint.year, choice: choice.label, impact: choice.impact, outcome: choice.outcome };
     const newState = applyDecision(journeyState, decision, choice.milestone);
@@ -471,39 +774,142 @@ export function ParallelYouTab() {
       const templates = checkpointTemplateMap[key] || checkpointTemplateMap['career-safe'];
       const nextStep = journeyStep + 1;
 
+      const activePathTitle = results?.paths[chosenPath === 'A' ? 0 : 1]?.title || replayJourney?.pathTitle || 'Your Path';
+
       if (nextStep < templates.length) {
         setJourneyStep(nextStep);
-        const pathData = results?.paths[chosenPath === 'A' ? 0 : 1];
-        const cp = generateCheckpoint(templates[nextStep], newState, scenario, pathData?.title || 'Your Path');
+        const cp = generateCheckpoint(templates[nextStep], newState, scenario, activePathTitle);
         setCurrentCheckpoint(cp);
       } else {
-        // Journey complete
-        addXP(50);
-        setAchievements(computeAchievements(newState, chosenPath || 'A'));
+        // Journey complete — award XP based on journey count
+        playReveal();
+        const journeyNumber = pastJourneys.length + 1;
+        addXP(100 * journeyNumber);
+        const earned = computeAchievements(newState, chosenPath || 'A');
+        setAchievements(earned);
+
+        // Save to localStorage
+        const story = generateLifeStory(newState, scenario, activePathTitle, selectedCategory?.label || 'Life');
+        const saved: SavedJourney = {
+          id: Date.now().toString(36),
+          date: new Date().toLocaleDateString(),
+          category: selectedCategory?.label || 'Unknown',
+          scenario,
+          pathTitle: activePathTitle,
+          pathType: chosenPath || 'A',
+          finalStats: { ...newState.stats },
+          xp,
+          level,
+          achievements: earned.map(a => a.label),
+          lifeStory: story,
+          decisions: newState.decisions.map(d => ({ year: d.year, choice: d.choice, outcome: d.outcome, impact: d.impact as Record<string, number> })),
+          categoryId: selectedCategory?.id || 'career',
+          choiceIndices: [...choiceIndices, cIdx],
+          financialScore: savedScores.financial,
+          happinessScore: savedScores.happiness,
+          replayable: true,
+          forkedFrom: replayJourney?.id,
+        };
+        saveJourney(saved);
+        savePlayerStats(xp, level);
+        setPastJourneys(loadSavedJourneys());
+        setPlayerStats(loadPlayerStats());
+
         setPhase('summary');
       }
     }, 2200);
-  }, [journeyState, currentCheckpoint, journeyStep, selectedCategory, chosenPath, results, scenario, addXP]);
+  }, [journeyState, currentCheckpoint, journeyStep, selectedCategory, chosenPath, results, scenario, addXP, pastJourneys, choiceIndices, savedScores, replayJourney]);
+
+  const handleShare = useCallback(() => {
+    if (!journeyState || !results || !chosenPath) return;
+    const pathData = results.paths[chosenPath === 'A' ? 0 : 1];
+    const story = generateLifeStory(journeyState, scenario, pathData.title, selectedCategory?.label || 'Life');
+    const text = generateShareText(scenario, pathData.title, chosenPath, journeyState.stats, achievements, story, xp, level);
+    navigator.clipboard.writeText(text).then(() => {
+      setShareStatus('copied');
+      setTimeout(() => setShareStatus('idle'), 2500);
+    }).catch(() => {});
+  }, [journeyState, results, chosenPath, scenario, selectedCategory, achievements, xp, level]);
+
+  // ─── Replay & Fork ──────────────────────────────────────────────────────────
+
+  const reconstructAndFork = useCallback((journey: SavedJourney, forkAtIndex: number) => {
+    const cat = CATEGORIES.find(c => c.id === journey.categoryId) || CATEGORIES[0];
+    setSelectedCategory(cat);
+    setScenario(journey.scenario);
+    setChosenPath(journey.pathType);
+    setSavedScores({ financial: journey.financialScore ?? 5, happiness: journey.happinessScore ?? 5 });
+
+    const templateKey = `${journey.categoryId}-${journey.pathType === 'A' ? 'safe' : 'bold'}`;
+    const templates = checkpointTemplateMap[templateKey] || checkpointTemplateMap['career-safe'];
+
+    let state = createInitialState(journey.pathType, journey.financialScore ?? 5, journey.happinessScore ?? 5);
+
+    // Replay decisions up to the fork point
+    for (let i = 0; i < forkAtIndex; i++) {
+      const cp = generateCheckpoint(templates[i], state, journey.scenario, journey.pathTitle);
+      const cIdx = journey.choiceIndices?.[i] ?? 0;
+      const selectedChoice = cp.choices[cIdx];
+      const decision = { year: cp.year, choice: selectedChoice.label, impact: selectedChoice.impact, outcome: selectedChoice.outcome };
+      state = applyDecision(state, decision, selectedChoice.milestone);
+    }
+
+    setJourneyState(state);
+    setJourneyStep(forkAtIndex);
+    setChoiceIndices(journey.choiceIndices?.slice(0, forkAtIndex) || []);
+    setShowOutcome(null); setShowMilestone(null);
+
+    // Generate the fork-point checkpoint
+    const forkCp = generateCheckpoint(templates[forkAtIndex], state, journey.scenario, journey.pathTitle);
+    setCurrentCheckpoint(forkCp);
+    setReplayJourney(journey);
+
+    initAudio(); playClick();
+    setPhase('journey');
+  }, []);
 
   const restart = useCallback(() => {
     setPhase('intro'); setSelectedCategory(null); setScenario(''); setCurrentQuestion(0);
     setAnswers([]); setResults(null); setError(null); setChosenPath(null);
     setJourneyState(null); setJourneyStep(0); setCurrentCheckpoint(null);
     setShowOutcome(null); setShowMilestone(null); setAchievements([]);
+    setStreak(0); setJourneyConfidence(''); setReplayJourney(null);
   }, []);
 
   // ─── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className="game-container">
+    <div className={`game-container ${shaking ? 'shake' : ''}`}>
       <ParticleField />
       <ModelBanner state={loader.state} progress={loader.progress} error={loader.error} onLoad={loader.ensure} label="Local LLM" />
 
+      {/* Dark transition overlay */}
+      <AnimatePresence>
+        {darkTransition && <motion.div className="dark-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }} />}
+      </AnimatePresence>
+
       {phase !== 'intro' && (
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="game-hud">
-          <XPBar xp={xp} level={level} />
+          <div className="hud-row">
+            <div className="hud-left">
+              <span className="hud-name">{playerName || 'Traveler'}</span>
+              <span className="hud-level-badge">LVL {level}</span>
+            </div>
+            <div className="hud-center">
+              <XPBar xp={xp} level={level} />
+            </div>
+            <div className="hud-right">
+              {phase === 'journey' && journeyState && (
+                <div className="hud-mini-stats">
+                  <span style={{color:'#4ade80'}}>{journeyState.stats.wealth}</span>
+                  <span style={{color:'#fbbf24'}}>{journeyState.stats.happiness}</span>
+                  <span style={{color:'#22d3ee'}}>{journeyState.stats.health}</span>
+                </div>
+              )}
+            </div>
+          </div>
           <AnimatePresence>
-            {showXpPopup && <motion.div className="xp-popup" initial={{ opacity: 0, y: 0, scale: 0.5 }} animate={{ opacity: 1, y: -20, scale: 1 }} exit={{ opacity: 0, y: -40 }}>+XP</motion.div>}
+            {showXpPopup && <motion.div className="xp-popup" initial={{ opacity: 0, y: 0, scale: 0.5 }} animate={{ opacity: 1, y: -20, scale: 1 }} exit={{ opacity: 0, y: -60, scale: 0.5 }}>+{xpAmount} XP</motion.div>}
           </AnimatePresence>
         </motion.div>
       )}
@@ -527,11 +933,93 @@ export function ParallelYouTab() {
           {/* ── INTRO ─────────────────────────────────────────────────── */}
           {phase === 'intro' && (
             <motion.div key="intro" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="phase-intro">
-              <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }} className="intro-icon">{'\u{1F30C}'}</motion.div>
-              <h1 className="intro-title"><span className="intro-title-gradient">Parallel You</span></h1>
-              <p className="intro-subtitle">Every decision splits your universe into two.<br />Explore both timelines. Live the journey. Choose your destiny.</p>
-              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setPhase('category')} className="btn-game-primary"><span className="btn-game-glow" />Begin Simulation</motion.button>
-              <div className="intro-hint">Powered by on-device AI - no data leaves your browser</div>
+              <div className="intro-brand">
+                <span className="intro-brand-icon">{'\u{1F30C}'}</span>
+                <span className="intro-brand-text">Parallel You</span>
+              </div>
+
+              <div className="intro-hero-typewriter">
+                <LandingTypewriter phrases={['What if you chose differently?', 'The better version of you is waiting.', 'Explore the life you never lived.']} />
+              </div>
+
+              {/* Player name */}
+              <div className="name-input-wrapper">
+                <label className="name-label">What's your name, traveler?</label>
+                <input className="name-input" value={playerName} onChange={e => setPlayerName(e.target.value)} placeholder="Enter your name..." maxLength={20} />
+              </div>
+
+              {/* Player stats */}
+              {playerStats.totalJourneys > 0 && (
+                <div className="intro-player-stats">
+                  <span>{'\u{1F3C6}'} {playerStats.totalXP} Total XP</span>
+                  <span>{'\u{1F30C}'} {playerStats.totalJourneys} Journeys</span>
+                  <span>{'\u{26A1}'} Level {playerStats.highestLevel}</span>
+                </div>
+              )}
+
+              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => {
+                if (playerName.trim()) localStorage.setItem('parallelYou_name', playerName.trim());
+                initAudio(); playClick(); setPhase('category');
+              }} className="btn-game-primary btn-start-journey"><span className="btn-game-glow" />Start Your Journey</motion.button>
+
+              {/* Past journeys */}
+              {pastJourneys.length > 0 && (
+                <div className="past-journeys">
+                  <div className="past-journeys-title">Past Journeys</div>
+                  {pastJourneys.slice(0, 3).map(j => (
+                    <div key={j.id} className="past-journey-card">
+                      <div className="pj-header">
+                        <span className="pj-path">{j.pathType === 'A' ? '\u{1F6E1}\u{FE0F}' : '\u{1F525}'} {j.pathTitle}</span>
+                        <span className="pj-date">{j.date}</span>
+                      </div>
+                      <div className="pj-scenario">{j.scenario}</div>
+                      <div className="pj-stats">
+                        <span>{'\u{1F4B0}'}{j.finalStats.wealth}</span>
+                        <span>{'\u{1F60A}'}{j.finalStats.happiness}</span>
+                        <span>{'\u{1F49A}'}{j.finalStats.health}</span>
+                        <span>{'\u{1F3C6}'}{j.xp} XP</span>
+                      </div>
+                      {j.replayable && (
+                        <button className="pj-replay-btn" onClick={() => { setReplayJourney(j); setPhase('replay'); }}>
+                          {'\u{1F500}'} Fork Journey
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="intro-hint">Powered by on-device AI — no data leaves your browser</div>
+            </motion.div>
+          )}
+
+          {/* ── REPLAY / FORK ────────────────────────────────────────── */}
+          {phase === 'replay' && replayJourney && (
+            <motion.div key="replay" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} className="phase-replay">
+              <h2 className="phase-title">Choose Your Fork Point</h2>
+              <p className="phase-subtitle">Tap a decision to change it and replay from there</p>
+              <div className="replay-journey-info">
+                <span>{replayJourney.pathType === 'A' ? '\u{1F6E1}\u{FE0F}' : '\u{1F525}'} {replayJourney.pathTitle}</span>
+                <span className="replay-scenario">{replayJourney.scenario}</span>
+              </div>
+              <div className="replay-timeline">
+                {replayJourney.decisions.map((d, i) => (
+                  <motion.div key={i} className="replay-node" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}>
+                    <div className="replay-node-left">
+                      <div className="replay-node-year">Year {d.year}</div>
+                      <div className="replay-node-dot" />
+                    </div>
+                    <div className="replay-node-info">
+                      <div className="replay-node-choice">{d.choice}</div>
+                      <div className="replay-node-outcome">{d.outcome}</div>
+                    </div>
+                    <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="replay-fork-btn" onClick={() => reconstructAndFork(replayJourney, i)}>
+                      Fork Here
+                    </motion.button>
+                  </motion.div>
+                ))}
+              </div>
+              <button onClick={() => { setReplayJourney(null); setPhase('intro'); }} className="btn-game-back">{'\u2190'} Back</button>
             </motion.div>
           )}
 
@@ -589,7 +1077,21 @@ export function ParallelYouTab() {
           {phase === 'questions' && selectedCategory && (
             <motion.div key="questions" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} className="phase-questions">
               <ProgressSteps current={currentQuestion} total={selectedCategory.questions.length} />
-              <div className="question-counter">Question {currentQuestion + 1} of {selectedCategory.questions.length}</div>
+              <div className="question-counter">
+                Question {currentQuestion + 1} of {selectedCategory.questions.length}
+              </div>
+
+              {/* Previously answered summary */}
+              {answers.length > 0 && (
+                <div className="answers-summary">
+                  {answers.map((a, i) => {
+                    const q = selectedCategory.questions[i];
+                    const opt = q.options.find(o => o.value === a);
+                    return <span key={i} className="answer-chip">{opt ? `${opt.emoji} ${opt.label}` : `\u{270D}\u{FE0F} ${a}`}</span>;
+                  })}
+                </div>
+              )}
+
               <AnimatePresence mode="wait">
                 <motion.div key={currentQuestion} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }} className="question-card">
                   <h3 className="question-text">{selectedCategory.questions[currentQuestion].text}</h3>
@@ -600,15 +1102,36 @@ export function ParallelYouTab() {
                       </motion.button>
                     ))}
                   </div>
+                  <div className="custom-answer-section">
+                    <div className="custom-answer-divider"><span>or share your own thought</span></div>
+                    <div className="custom-answer-row">
+                      <input
+                        className="custom-answer-input"
+                        value={customAnswer}
+                        onChange={e => setCustomAnswer(e.target.value)}
+                        onKeyDown={e => { if (e.key === 'Enter' && customAnswer.trim()) handleAnswer(customAnswer.trim()); }}
+                        placeholder="Type your own answer..."
+                        maxLength={120}
+                      />
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => { if (customAnswer.trim()) handleAnswer(customAnswer.trim()); }}
+                        disabled={!customAnswer.trim()}
+                        className="custom-answer-submit"
+                      >{'\u2192'}</motion.button>
+                    </div>
+                  </div>
                 </motion.div>
               </AnimatePresence>
+              <button onClick={goBackQuestion} className="btn-game-back">{'\u2190'} {currentQuestion > 0 ? 'Previous Question' : 'Back to Scenario'}</button>
             </motion.div>
           )}
 
           {/* ── SIMULATING ────────────────────────────────────────────── */}
           {phase === 'simulating' && (
             <motion.div key="simulating" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="phase-simulating">
-              <div className="sim-portal">
+              <div className="sim-portal glitch">
                 <div className="sim-ring sim-ring-1" /><div className="sim-ring sim-ring-2" /><div className="sim-ring sim-ring-3" />
                 <div className="sim-core">{'\u{1F30C}'}</div>
               </div>
@@ -635,7 +1158,7 @@ export function ParallelYouTab() {
           {/* ── REVEAL ────────────────────────────────────────────────── */}
           {phase === 'reveal' && results && (
             <motion.div key="reveal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="phase-reveal">
-              <motion.h2 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="reveal-title">Two Timelines Diverge</motion.h2>
+              <motion.h2 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="reveal-title"><TypewriterText text={`${playerName || 'Traveler'}, Two Timelines Diverge`} speed={60} /></motion.h2>
               <p className="reveal-subtitle">Your decision: <em>{scenario}</em></p>
 
               <div className="paths-container">
@@ -693,6 +1216,12 @@ export function ParallelYouTab() {
                 <div className="ai-rec-score">{results.recommendation.confidenceScore}%</div>
                 <p className="ai-rec-reason">{results.recommendation.reason}</p>
               </motion.div>
+
+              {/* Back / Redo */}
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
+                <button onClick={() => { setResults(null); setCurrentQuestion(0); setAnswers([]); setPhase('questions'); }} className="btn-game-back">{'\u2190'} Redo Quiz</button>
+                <button onClick={() => { setResults(null); setPhase('scenario'); }} className="btn-game-back">{'\u2190'} Change Scenario</button>
+              </motion.div>
             </motion.div>
           )}
 
@@ -711,7 +1240,7 @@ export function ParallelYouTab() {
               <div className="journey-timeline-bar">
                 {[1, 3, 5, 7, 10].map((yr, i) => (
                   <div key={yr} className={`journey-timeline-dot ${i < journeyStep ? 'jt-done' : ''} ${i === journeyStep ? 'jt-current' : ''}`}>
-                    <span className="jt-year">Y{yr}</span>
+                    <span className="jt-year">Year {yr}</span>
                   </div>
                 ))}
               </div>
@@ -766,11 +1295,28 @@ export function ParallelYouTab() {
                     <h3 className="journey-card-title">{currentCheckpoint.title}</h3>
                     <p className="journey-card-scenario">{currentCheckpoint.scenario}</p>
 
+                    {/* Confidence input — bonus XP for explaining your reasoning */}
+                    <div className="journey-confidence">
+                      <input
+                        type="text"
+                        value={journeyConfidence}
+                        onChange={(e) => setJourneyConfidence(e.target.value)}
+                        placeholder="Why this choice? (optional, +10 XP bonus)"
+                        className="journey-confidence-input"
+                      />
+                      {journeyConfidence.trim().length > 10 && (
+                        <span className="confidence-bonus">+10 XP bonus!</span>
+                      )}
+                    </div>
+
                     <div className="journey-options">
                       {currentCheckpoint.choices.map((opt, i) => (
-                        <motion.button key={i} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + i * 0.1 }} whileHover={{ scale: 1.02, x: 6 }} whileTap={{ scale: 0.98 }} onClick={() => handleJourneyChoice(opt)} className="journey-option-btn">
+                        <motion.button key={i} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + i * 0.1 }} whileHover={{ scale: 1.02, x: 6 }} whileTap={{ scale: 0.98 }} onClick={() => handleJourneyChoice(opt)} className={`journey-option-btn ${Object.values(opt.impact).reduce((a, b) => a + (b as number), 0) > 0 ? 'jo-positive' : Object.values(opt.impact).reduce((a, b) => a + (b as number), 0) < 0 ? 'jo-negative' : ''}`}>
                           <span className="journey-opt-emoji">{opt.emoji}</span>
-                          <span className="journey-opt-label">{opt.label}</span>
+                          <div className="journey-opt-content">
+                            <span className="journey-opt-label">{opt.label}</span>
+                            {opt.milestone && <span className="journey-opt-milestone">{'\u{1F3C5}'} {opt.milestone}</span>}
+                          </div>
                           <div className="journey-opt-effects">
                             {Object.entries(opt.impact).filter(([, v]) => v !== 0).slice(0, 3).map(([k, v]) => (
                               <span key={k} className={(v as number) > 0 ? 'je-pos' : 'je-neg'}>
@@ -781,6 +1327,7 @@ export function ParallelYouTab() {
                         </motion.button>
                       ))}
                     </div>
+
 
                     {currentCheckpoint.turningPoint && (
                       <div className="turning-point-warning">This decision will define the rest of your journey. No going back.</div>
@@ -825,7 +1372,7 @@ export function ParallelYouTab() {
                   <div className="summary-log-title">Stat Evolution</div>
                   {journeyState.statHistory.map((snap, i) => (
                     <div key={i} className="stat-evolution-row">
-                      <span className="stat-evo-year">{i === 0 ? 'Start' : `Y${[1, 3, 5, 7, 10][i - 1] || '?'}`}</span>
+                      <span className="stat-evo-year">{i === 0 ? 'Start' : `Year ${[1, 3, 5, 7, 10][i - 1] || '?'}`}</span>
                       <div className="stat-evo-bars">
                         {[
                           { key: 'wealth', val: snap.wealth, cls: 'evo-wealth' },
@@ -840,6 +1387,18 @@ export function ParallelYouTab() {
                     </div>
                   ))}
                 </div>
+              )}
+
+              {/* Parallel Timeline */}
+              {selectedCategory && results && chosenPath && (
+                <ParallelTimeline
+                  chosenDecisions={journeyState.decisions}
+                  otherTemplates={checkpointTemplateMap[`${selectedCategory.id}-${chosenPath === 'A' ? 'bold' : 'safe'}`] || []}
+                  chosenTitle={results.paths[chosenPath === 'A' ? 0 : 1].title}
+                  otherTitle={results.paths[chosenPath === 'A' ? 1 : 0].title}
+                  chosenEmoji={chosenPath === 'A' ? '\u{1F6E1}\u{FE0F}' : '\u{1F525}'}
+                  otherEmoji={chosenPath === 'A' ? '\u{1F525}' : '\u{1F6E1}\u{FE0F}'}
+                />
               )}
 
               {/* Journey Log */}
@@ -888,9 +1447,20 @@ export function ParallelYouTab() {
                 <div className="summary-level">Level {level} Decision Maker</div>
               </div>
 
+              {/* Background AI Insight */}
+              {bgInsight && (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="summary-ai-insight">
+                  <div className="ai-insight-label">{'\u{1F9E0}'} AI Insight (generated while you played)</div>
+                  <p className="ai-insight-text">{bgInsight}</p>
+                </motion.div>
+              )}
+
               <div className="summary-actions">
                 <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={restart} className="btn-game-primary">{'\u{1F504}'} New Simulation</motion.button>
-                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setPhase('reveal')} className="btn-game-secondary">{'\u2190'} Review Paths</motion.button>
+                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleShare} className="btn-game-secondary">
+                  {shareStatus === 'copied' ? '\u{2705} Copied!' : '\u{1F4CB} Share Journey'}
+                </motion.button>
+                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setPhase('reveal')} className="btn-game-back">{'\u2190'} Review Paths</motion.button>
               </div>
             </motion.div>
           )}
