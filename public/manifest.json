@@ -1,11 +1,11 @@
 {
-  "name": "Parallel You — AI Decision Simulator",
-  "short_name": "ParallelYou",
-  "description": "Simulate parallel life paths with on-device AI — no internet needed after first load.",
+  "name": "Tend — Offline First Aid",
+  "short_name": "Tend",
+  "description": "On-device first-aid guidance for places without internet. Your data never leaves your phone.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#7c3aed",
+  "background_color": "#ffffff",
+  "theme_color": "#0284c7",
   "orientation": "portrait-primary",
   "icons": [
     {
@@ -21,6 +21,6 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["productivity", "utilities"],
+  "categories": ["health", "medical", "utilities"],
   "lang": "en"
 }

@@ -1,9 +1,9 @@
 // ============================================================
-// ParallelYou — Service Worker
+// Tend — Service Worker
 // Strategy: Cache-first for static assets & WASM, Network-first for API
 // ============================================================
 
-const CACHE_NAME = 'parallelyou-v1';
+const CACHE_NAME = 'tend-v2';
 const OFFLINE_URL = '/offline.html';
 
 // Assets to pre-cache on install (app shell + WASM engines)

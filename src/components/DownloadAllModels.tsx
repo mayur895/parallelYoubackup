@@ -12,8 +12,11 @@ interface DownloadStatus {
 }
 
 const MODEL_LIST = [
-  { id: 'lfm2-350m-q4_k_m', name: 'LFM2 350M — Chat LLM', size: '~250 MB' },
+  { id: 'lfm2-350m-q4_k_m', name: 'LFM2 350M · Language model', size: '~250 MB' },
 ];
+
+const FONT = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
+const DISPLAY = "'Space Grotesk', 'Inter', sans-serif";
 
 export function DownloadAllModels() {
   const [open, setOpen] = useState(false);
@@ -30,37 +33,23 @@ export function DownloadAllModels() {
     setOpen(true);
     setRunning(true);
     setDone(false);
+    setStatuses(MODEL_LIST.map((m) => ({
+      id: m.id, name: m.name, progress: 0, status: 'pending',
+    })));
 
-    // Init statuses
-    setStatuses(
-      MODEL_LIST.map((m) => ({
-        id: m.id,
-        name: m.name,
-        progress: 0,
-        status: 'pending',
-      }))
-    );
-
-    // Make sure SDK is initialized
     await initSDK();
 
     for (const model of MODEL_LIST) {
-      // Check if already downloaded
       const models = ModelManager.getModels();
       const found = models.find((m) => m.id === model.id);
       if (found && (found.status === 'downloaded' || found.status === 'loaded')) {
         updateStatus(model.id, { status: 'done', progress: 1 });
         continue;
       }
-
       updateStatus(model.id, { status: 'downloading', progress: 0 });
-
       const unsub = EventBus.shared.on('model.downloadProgress', (evt: any) => {
-        if (evt.modelId === model.id) {
-          updateStatus(model.id, { progress: evt.progress ?? 0 });
-        }
+        if (evt.modelId === model.id) updateStatus(model.id, { progress: evt.progress ?? 0 });
       });
-
       try {
         await ModelManager.downloadModel(model.id);
         updateStatus(model.id, { status: 'done', progress: 1 });
@@ -69,9 +58,7 @@ export function DownloadAllModels() {
           status: 'error',
           error: err instanceof Error ? err.message : 'Download failed',
         });
-      } finally {
-        unsub();
-      }
+      } finally { unsub(); }
     }
 
     setRunning(false);
@@ -82,74 +69,84 @@ export function DownloadAllModels() {
 
   return (
     <>
-      {/* Trigger Button */}
       <button
         onClick={startDownload}
         disabled={running}
         style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          padding: '0.6rem 1.4rem',
-          borderRadius: '0.75rem',
-          border: '1px solid rgba(124, 58, 237, 0.5)',
-          background: running
-            ? 'rgba(124, 58, 237, 0.15)'
-            : 'rgba(124, 58, 237, 0.25)',
-          color: '#c4b5fd',
-          fontSize: '0.85rem',
-          fontWeight: 600,
+          display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+          padding: '0.6rem 1rem', borderRadius: '0.75rem',
+          border: `1px solid ${allDone ? 'rgba(52,211,153,0.4)' : 'rgba(255,255,255,0.12)'}`,
+          background: allDone
+            ? 'rgba(52,211,153,0.12)'
+            : 'rgba(255,255,255,0.06)',
+          color: allDone ? '#34d399' : running ? '#94a3b8' : '#f1f5f9',
+          fontSize: '0.8rem',
+          fontWeight: 700,
           cursor: running ? 'not-allowed' : 'pointer',
-          backdropFilter: 'blur(8px)',
-          transition: 'all 0.2s',
+          fontFamily: DISPLAY,
+          letterSpacing: '-0.01em',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          boxShadow: '0 8px 24px -8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)',
+          transition: 'all 0.15s',
         }}
       >
-        {allDone ? '✅ All Models Cached' : running ? '⬇️ Downloading...' : '⬇️ Download All Models'}
+        {allDone ? '✓ Offline ready' : running ? 'Downloading…' : 'Prepare offline use'}
       </button>
 
-      {/* Drawer */}
       {open && (
         <div
           style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 1000,
-            display: 'flex',
-            alignItems: 'flex-end',
-            justifyContent: 'center',
-            background: 'rgba(0,0,0,0.6)',
-            backdropFilter: 'blur(4px)',
+            position: 'fixed', inset: 0, zIndex: 1000,
+            display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+            background: 'rgba(7,11,24,0.7)',
+            backdropFilter: 'blur(8px)',
           }}
-          onClick={(e) => {
-            if (!running && e.target === e.currentTarget) setOpen(false);
-          }}
+          onClick={(e) => { if (!running && e.target === e.currentTarget) setOpen(false); }}
         >
           <div
             style={{
-              width: '100%',
-              maxWidth: '480px',
-              background: 'linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: '1.5rem 1.5rem 0 0',
-              padding: '2rem',
-              boxShadow: '0 -20px 60px rgba(0,0,0,0.8)',
+              width: '100%', maxWidth: '500px',
+              background: 'linear-gradient(180deg, rgba(15,20,38,0.95), rgba(7,11,24,0.95))',
+              border: '1px solid rgba(255,255,255,0.08)',
+              borderTop: '1px solid rgba(251,191,36,0.4)',
+              borderRadius: '22px 22px 0 0',
+              padding: '24px',
+              boxShadow: '0 -20px 60px rgba(0,0,0,0.6)',
+              fontFamily: FONT,
+              backdropFilter: 'blur(18px)',
+              WebkitBackdropFilter: 'blur(18px)',
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem' }}>
               <div>
-                <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#e2e8f0', marginBottom: '0.25rem' }}>
-                  📦 Download All Models
+                <div style={{
+                  fontSize: 11, fontWeight: 700, color: '#fbbf24',
+                  letterSpacing: '.12em', textTransform: 'uppercase', marginBottom: 4,
+                }}>Offline pack</div>
+                <h2 style={{
+                  fontSize: '1.2rem', fontWeight: 700, color: '#f1f5f9',
+                  fontFamily: DISPLAY, letterSpacing: '-0.01em',
+                }}>
+                  Prepare Tend for offline use
                 </h2>
-                <p style={{ fontSize: '0.78rem', color: '#6b7280' }}>
-                  {done ? 'All done! Models are cached locally — works offline forever.' : 'Cached in browser storage (OPFS). One-time download needed.'}
+                <p style={{ fontSize: '0.8rem', color: '#94a3b8', lineHeight: 1.55, marginTop: 6 }}>
+                  {done
+                    ? 'Cached on this device. Tend will work without internet from now on.'
+                    : 'A one-time download into private browser storage. About 250 MB.'}
                 </p>
               </div>
               {!running && (
                 <button
                   onClick={() => setOpen(false)}
-                  style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '0.5rem', color: '#9ca3af', padding: '0.4rem 0.8rem', cursor: 'pointer' }}
+                  style={{
+                    background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)',
+                    borderRadius: '0.5rem', color: '#cbd5e1',
+                    padding: '0.4rem 0.7rem', cursor: 'pointer', fontSize: '0.85rem',
+                    fontFamily: DISPLAY,
+                  }}
                 >
-                  ✕
+                  Close
                 </button>
               )}
             </div>
@@ -164,37 +161,37 @@ export function DownloadAllModels() {
                     style={{
                       background: 'rgba(255,255,255,0.04)',
                       border: '1px solid rgba(255,255,255,0.08)',
-                      borderRadius: '0.75rem',
-                      padding: '0.75rem 1rem',
+                      borderRadius: '0.875rem',
+                      padding: '14px 16px',
                     }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-                      <span style={{ fontSize: '0.85rem', color: '#e2e8f0', fontWeight: 500 }}>{model.name}</span>
-                      <span style={{ fontSize: '0.75rem', color: '#6b7280' }}>{model.size}</span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                      <span style={{ fontSize: '0.85rem', color: '#f1f5f9', fontWeight: 600, fontFamily: DISPLAY }}>
+                        {model.name}
+                      </span>
+                      <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{model.size}</span>
                     </div>
-
-                    {/* Progress bar */}
-                    <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: '999px', height: '6px', overflow: 'hidden' }}>
+                    <div style={{ background: 'rgba(255,255,255,0.06)', borderRadius: '999px', height: '6px', overflow: 'hidden' }}>
                       <div
                         style={{
-                          height: '100%',
-                          borderRadius: '999px',
-                          width: `${pct}%`,
+                          height: '100%', borderRadius: '999px', width: `${pct}%`,
                           background: st?.status === 'done'
-                            ? 'linear-gradient(90deg, #22c55e, #16a34a)'
+                            ? 'linear-gradient(90deg, #34d399, #10b981)'
                             : st?.status === 'error'
-                            ? '#ef4444'
-                            : 'linear-gradient(90deg, #7c3aed, #2563eb)',
+                            ? '#fb7185'
+                            : 'linear-gradient(90deg, #fbbf24, #f43f5e)',
                           transition: 'width 0.3s ease',
                         }}
                       />
                     </div>
-
-                    <div style={{ marginTop: '0.3rem', fontSize: '0.72rem', color: st?.status === 'error' ? '#f87171' : '#6b7280' }}>
-                      {st?.status === 'done' && '✓ Cached'}
-                      {st?.status === 'error' && `⚠ ${st.error}`}
+                    <div style={{
+                      marginTop: '0.4rem', fontSize: '0.72rem',
+                      color: st?.status === 'error' ? '#fb7185' : '#94a3b8',
+                    }}>
+                      {st?.status === 'done' && 'Cached on device'}
+                      {st?.status === 'error' && st.error}
                       {st?.status === 'downloading' && `${pct}%`}
-                      {st?.status === 'pending' && 'Waiting...'}
+                      {st?.status === 'pending' && 'Waiting…'}
                       {!st && model.size}
                     </div>
                   </div>
@@ -206,19 +203,15 @@ export function DownloadAllModels() {
               <button
                 onClick={() => setOpen(false)}
                 style={{
-                  marginTop: '1.5rem',
-                  width: '100%',
-                  padding: '0.75rem',
-                  borderRadius: '0.75rem',
-                  border: 'none',
-                  background: 'linear-gradient(90deg, #7c3aed, #2563eb)',
-                  color: '#fff',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  fontSize: '1rem',
+                  marginTop: '1.25rem', width: '100%', padding: '0.85rem',
+                  borderRadius: '0.75rem', border: 'none',
+                  background: 'linear-gradient(135deg, #f59e0b, #f43f5e)',
+                  color: '#fff', fontWeight: 700, cursor: 'pointer',
+                  fontSize: '1rem', fontFamily: DISPLAY, letterSpacing: '-0.01em',
+                  boxShadow: '0 12px 32px -10px #f59e0b',
                 }}
               >
-                🚀 Ready — Use App Offline
+                Ready to use offline
               </button>
             )}
           </div>
