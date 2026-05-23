@@ -26,7 +26,7 @@
   "specialty": "Emergency department for severe hypos; diabetes team / general physician for follow-up.",
   "sources": [
     { "title": "International Diabetes Federation — hypoglycaemia management" },
-    { "title": "NHS — low blood sugar (hypoglycaemia)" },
+    { "title": "NHS — low blood sugar (hypoglycaemia)", "url": "https://www.nhs.uk/conditions/low-blood-sugar-hypoglycaemia/", "accessedOn": "2026-05-23" },
     { "title": "WHO — diabetes management" }
   ],
   "reviewedBy": null,

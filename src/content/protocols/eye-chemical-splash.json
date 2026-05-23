@@ -25,7 +25,7 @@
   "specialty": "Emergency department or eye casualty unit immediately.",
   "sources": [
     { "title": "WHO — eye injuries first aid" },
-    { "title": "NHS — chemical splash in the eye" },
+    { "title": "NHS — chemical splash in the eye", "url": "https://www.nhs.uk/conditions/eye-injuries/", "accessedOn": "2026-05-23" },
     { "title": "Royal College of Ophthalmologists — chemical eye injury" }
   ],
   "reviewedBy": null,

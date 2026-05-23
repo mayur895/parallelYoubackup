@@ -29,7 +29,7 @@
   "sources": [
     { "title": "WHO — rabies post-exposure prophylaxis" },
     { "title": "WHO — animal bites factsheet" },
-    { "title": "NHS — dog and animal bites" }
+    { "title": "NHS — dog and animal bites", "url": "https://www.nhs.uk/conditions/animal-and-human-bites/", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

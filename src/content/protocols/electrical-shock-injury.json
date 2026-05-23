@@ -26,7 +26,7 @@
   "specialty": "Emergency department for assessment; burns unit if large burns.",
   "sources": [
     { "title": "Red Cross — electrical injuries" },
-    { "title": "NHS — electric shock first aid" },
+    { "title": "NHS — electric shock first aid", "url": "https://www.nhs.uk/tests-and-treatments/first-aid/", "accessedOn": "2026-05-23" },
     { "title": "St John Ambulance — electric shock" }
   ],
   "reviewedBy": null,

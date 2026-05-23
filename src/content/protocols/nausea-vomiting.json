@@ -22,7 +22,7 @@
   ],
   "specialty": "General physician; emergency department for any escalation sign.",
   "sources": [
-    { "title": "NHS — nausea and vomiting" }
+    { "title": "NHS — nausea and vomiting", "url": "https://www.nhs.uk/symptoms/diarrhoea-and-vomiting/", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

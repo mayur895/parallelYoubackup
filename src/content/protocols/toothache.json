@@ -23,7 +23,7 @@
   ],
   "specialty": "Dentist; emergency department for facial swelling or breathing trouble.",
   "sources": [
-    { "title": "NHS — toothache" }
+    { "title": "NHS — toothache", "url": "https://www.nhs.uk/symptoms/toothache/", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

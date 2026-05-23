@@ -23,7 +23,7 @@
   ],
   "specialty": "General physician.",
   "sources": [
-    { "title": "NHS — common cold" }
+    { "title": "NHS — common cold", "url": "https://www.nhs.uk/conditions/common-cold/", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

@@ -23,7 +23,7 @@
   ],
   "specialty": "Orthopaedic clinic or physiotherapist for persistent pain.",
   "sources": [
-    { "title": "NHS — sprains and strains" }
+    { "title": "NHS — sprains and strains", "url": "https://www.nhs.uk/conditions/sprains-and-strains/", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

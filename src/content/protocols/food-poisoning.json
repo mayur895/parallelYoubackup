@@ -23,7 +23,7 @@
   ],
   "specialty": "General physician; emergency department for any escalation sign.",
   "sources": [
-    { "title": "NHS — food poisoning" }
+    { "title": "NHS — food poisoning", "url": "https://www.nhs.uk/conditions/food-poisoning/", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

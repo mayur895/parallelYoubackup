@@ -27,7 +27,7 @@
   "specialty": "Emergency department for severe attacks; family doctor / pulmonologist for ongoing asthma management.",
   "sources": [
     { "title": "WHO — asthma management" },
-    { "title": "NHS — asthma attack first aid" },
+    { "title": "NHS — asthma attack first aid", "url": "https://www.nhs.uk/conditions/asthma/asthma-attack/", "accessedOn": "2026-05-23" },
     { "title": "St John Ambulance — asthma" }
   ],
   "reviewedBy": null,

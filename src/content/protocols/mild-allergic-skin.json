@@ -23,8 +23,8 @@
   ],
   "specialty": "General physician or allergist; emergency department for any escalation sign.",
   "sources": [
-    { "title": "NHS — hives" },
-    { "title": "NHS — allergies" }
+    { "title": "NHS — hives", "url": "https://www.nhs.uk/conditions/hives/", "accessedOn": "2026-05-23" },
+    { "title": "NHS — allergies", "url": "https://www.nhs.uk/conditions/allergies/", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

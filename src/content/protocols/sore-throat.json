@@ -22,7 +22,7 @@
   ],
   "specialty": "General physician.",
   "sources": [
-    { "title": "NHS — sore throat" }
+    { "title": "NHS — sore throat", "url": "https://www.nhs.uk/symptoms/sore-throat/", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

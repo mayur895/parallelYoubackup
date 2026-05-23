@@ -22,7 +22,7 @@
   ],
   "specialty": "General physician; emergency department for any escalation sign.",
   "sources": [
-    { "title": "NHS — sunburn" }
+    { "title": "NHS — sunburn", "url": "https://www.nhs.uk/conditions/sunburn/", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

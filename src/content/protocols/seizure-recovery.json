@@ -27,7 +27,7 @@
   "specialty": "Emergency department for any of the above; neurology / epilepsy clinic for follow-up.",
   "sources": [
     { "title": "WHO — epilepsy: a public health imperative" },
-    { "title": "NHS — what to do if someone has a seizure" },
+    { "title": "NHS — what to do if someone has a seizure", "url": "https://www.nhs.uk/symptoms/what-to-do-if-someone-has-a-seizure-fit/", "accessedOn": "2026-05-23" },
     { "title": "International League Against Epilepsy — first aid" }
   ],
   "reviewedBy": null,

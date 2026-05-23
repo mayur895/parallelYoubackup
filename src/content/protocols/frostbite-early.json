@@ -28,7 +28,7 @@
   "specialty": "Emergency department; specialist burns or wound unit for deep frostbite.",
   "sources": [
     { "title": "Wilderness Medical Society — frostbite guidelines" },
-    { "title": "NHS — frostbite" },
+    { "title": "NHS — frostbite", "url": "https://www.nhs.uk/conditions/frostbite/", "accessedOn": "2026-05-23" },
     { "title": "Indian Army Medical Corps — high-altitude cold injury management" }
   ],
   "reviewedBy": null,

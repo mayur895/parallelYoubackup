@@ -23,7 +23,7 @@
   ],
   "specialty": "General physician or ENT specialist for repeated nosebleeds.",
   "sources": [
-    { "title": "NHS — nosebleeds" }
+    { "title": "NHS — nosebleeds", "url": "https://www.nhs.uk/conditions/nosebleed/", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

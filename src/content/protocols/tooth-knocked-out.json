@@ -24,7 +24,7 @@
   "specialty": "Emergency dentist; emergency department for associated facial trauma.",
   "sources": [
     { "title": "International Association of Dental Traumatology — avulsion guidelines" },
-    { "title": "NHS — knocked-out tooth first aid" }
+    { "title": "NHS — knocked-out tooth first aid", "url": "https://www.nhs.uk/conditions/knocked-out-tooth/", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

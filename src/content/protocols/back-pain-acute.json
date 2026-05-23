@@ -24,7 +24,7 @@
   ],
   "specialty": "General physician or physiotherapist; emergency department for any escalation sign.",
   "sources": [
-    { "title": "NHS — back pain" }
+    { "title": "NHS — back pain", "url": "https://www.nhs.uk/conditions/back-pain/", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

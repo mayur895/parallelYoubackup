@@ -24,7 +24,7 @@
   ],
   "specialty": "General physician; emergency department for any escalation sign.",
   "sources": [
-    { "title": "NHS — stomach ache" }
+    { "title": "NHS — stomach ache", "url": "https://www.nhs.uk/symptoms/stomach-ache/", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

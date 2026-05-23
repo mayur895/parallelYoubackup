@@ -25,7 +25,7 @@
   ],
   "specialty": "Emergency department.",
   "sources": [
-    { "title": "NHS — alcohol poisoning" },
+    { "title": "NHS — alcohol poisoning", "url": "https://www.nhs.uk/conditions/alcohol-poisoning/", "accessedOn": "2026-05-23" },
     { "title": "WHO — harmful use of alcohol management guidelines" },
     { "title": "St John Ambulance — alcohol poisoning" }
   ],

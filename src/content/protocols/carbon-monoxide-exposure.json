@@ -27,7 +27,7 @@
   "specialty": "Emergency department — they can measure CO in blood and provide oxygen treatment.",
   "sources": [
     { "title": "WHO — household air pollution and CO exposure" },
-    { "title": "NHS — carbon monoxide poisoning" },
+    { "title": "NHS — carbon monoxide poisoning", "url": "https://www.nhs.uk/conditions/carbon-monoxide-poisoning/", "accessedOn": "2026-05-23" },
     { "title": "US CDC — carbon monoxide poisoning prevention" }
   ],
   "reviewedBy": null,

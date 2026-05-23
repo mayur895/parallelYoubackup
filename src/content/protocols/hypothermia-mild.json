@@ -27,7 +27,7 @@
   "specialty": "Emergency department; high-altitude clinic in Ladakh-type regions.",
   "sources": [
     { "title": "Wilderness Medical Society — hypothermia guidelines" },
-    { "title": "NHS — hypothermia" },
+    { "title": "NHS — hypothermia", "url": "https://www.nhs.uk/conditions/hypothermia/", "accessedOn": "2026-05-23" },
     { "title": "WHO — hypothermia in low-resource settings" }
   ],
   "reviewedBy": null,

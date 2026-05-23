@@ -22,7 +22,7 @@
   ],
   "specialty": "General physician — mention the tick bite so they can consider testing or antibiotics.",
   "sources": [
-    { "title": "NHS — tick bites" },
+    { "title": "NHS — tick bites", "url": "https://www.nhs.uk/conditions/lyme-disease/", "accessedOn": "2026-05-23" },
     { "title": "CDC — tickborne diseases" }
   ],
   "reviewedBy": null,

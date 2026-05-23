@@ -24,7 +24,7 @@
   ],
   "specialty": "General physician; emergency department for any escalation sign.",
   "sources": [
-    { "title": "NHS — fever in adults" }
+    { "title": "NHS — fever in adults", "url": "https://www.nhs.uk/symptoms/fever-in-adults/", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

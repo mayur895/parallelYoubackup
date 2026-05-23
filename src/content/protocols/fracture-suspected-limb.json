@@ -26,7 +26,8 @@
   "specialty": "Orthopaedic clinic or emergency department.",
   "sources": [
     { "title": "Red Cross — fractures" },
-    { "title": "NHS — broken arm or wrist / broken leg" },
+    { "title": "NHS — broken arm or wrist", "url": "https://www.nhs.uk/conditions/broken-arm-or-wrist/", "accessedOn": "2026-05-23" },
+    { "title": "NHS — broken leg", "url": "https://www.nhs.uk/conditions/broken-leg/", "accessedOn": "2026-05-23" },
     { "title": "St John Ambulance — fractures" }
   ],
   "reviewedBy": null,

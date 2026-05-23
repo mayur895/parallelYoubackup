@@ -27,7 +27,7 @@
   "specialty": "Emergency department or burns unit.",
   "sources": [
     { "title": "WHO — burn first aid" },
-    { "title": "NHS — chemical burns" },
+    { "title": "NHS — chemical burns", "url": "https://www.nhs.uk/conditions/acid-and-chemical-burns/", "accessedOn": "2026-05-23" },
     { "title": "British Burn Association — first aid for burns" }
   ],
   "reviewedBy": null,

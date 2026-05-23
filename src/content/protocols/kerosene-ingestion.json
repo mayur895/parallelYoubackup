@@ -27,7 +27,7 @@
   "specialty": "Emergency department; involve a poison control centre if available.",
   "sources": [
     { "title": "WHO — guidelines for poisoning" },
-    { "title": "NHS — poisoning" },
+    { "title": "NHS — poisoning", "url": "https://www.nhs.uk/conditions/poisoning/", "accessedOn": "2026-05-23" },
     { "title": "AIIMS National Poisons Information Centre — hydrocarbon ingestion" }
   ],
   "reviewedBy": null,

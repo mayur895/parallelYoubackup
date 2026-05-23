@@ -23,7 +23,7 @@
   ],
   "specialty": "General physician; emergency department for any escalation sign.",
   "sources": [
-    { "title": "NHS — fainting" }
+    { "title": "NHS — fainting", "url": "https://www.nhs.uk/conditions/fainting/", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,
