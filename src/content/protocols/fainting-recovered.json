@@ -1,0 +1,31 @@
+{
+  "id": "fainting-recovered",
+  "title": "Brief fainting (person now recovered)",
+  "bodySystem": "other",
+  "summary": "A short loss of consciousness lasting under a minute, often caused by low blood pressure, heat, hunger, or pain. The person should still be checked.",
+  "steps": [
+    "Help them lie down and raise their legs about 30 cm above heart level for a few minutes.",
+    "Loosen any tight clothing around the neck and waist.",
+    "Make sure they are breathing normally and the airway is clear.",
+    "Once they feel better, give them small sips of water and a light snack if they are hungry.",
+    "They should rest and avoid driving for the next 24 hours."
+  ],
+  "avoid": [
+    "Do not give them anything to eat or drink until they are fully alert and able to swallow.",
+    "Do not let them stand up suddenly.",
+    "Do not ignore the episode just because they have recovered."
+  ],
+  "whenToEscalate": [
+    "Always seek medical advice after a first faint, especially if over 40, pregnant, or with heart conditions.",
+    "Fainting while exercising, lying down, or that came on suddenly without warning — emergency.",
+    "Faint with chest pain, shortness of breath, palpitations, or convulsions — emergency.",
+    "Repeat fainting episodes."
+  ],
+  "specialty": "General physician; emergency department for any escalation sign.",
+  "sources": [
+    { "title": "NHS — fainting" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

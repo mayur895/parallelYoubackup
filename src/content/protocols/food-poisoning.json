@@ -1,0 +1,31 @@
+{
+  "id": "food-poisoning",
+  "title": "Suspected food poisoning",
+  "bodySystem": "poisoning",
+  "summary": "Sudden vomiting, diarrhoea, or cramps within hours of eating suspicious food. Usually settles in 1–2 days with rest and fluids.",
+  "steps": [
+    "Rest and stay near a bathroom for the first day.",
+    "Sip small amounts of water or oral rehydration solution every 10–15 minutes.",
+    "Once vomiting eases, return to bland foods slowly: dry toast, rice, banana, plain crackers.",
+    "Wash your hands thoroughly after each bathroom visit to avoid spreading the bug.",
+    "If others ate the same food, warn them."
+  ],
+  "avoid": [
+    "Avoid dairy, fatty food, caffeine, and alcohol for at least 48 hours.",
+    "Do not take anti-diarrhoea medicine for bloody diarrhoea or high fever — the body is trying to clear the infection.",
+    "Do not prepare food for others until 48 hours symptom-free."
+  ],
+  "whenToEscalate": [
+    "Blood in vomit or stool.",
+    "Signs of dehydration: very dark urine, dizziness, dry mouth, sunken eyes, no urination for 8+ hours.",
+    "High fever, severe abdominal pain, or symptoms lasting more than 3 days.",
+    "Food poisoning in pregnancy, infancy, old age, or with chronic illness — call a doctor early."
+  ],
+  "specialty": "General physician; emergency department for any escalation sign.",
+  "sources": [
+    { "title": "NHS — food poisoning" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

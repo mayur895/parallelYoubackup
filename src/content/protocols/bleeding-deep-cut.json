@@ -1,0 +1,29 @@
+{
+  "id": "bleeding-deep-cut",
+  "title": "Deep cut with steady bleeding",
+  "bodySystem": "bleeding",
+  "summary": "A deeper wound where you can see fat or muscle, or where bleeding has not slowed after a few minutes of pressure.",
+  "steps": [
+    "Lie or sit the person down and raise the wounded part above heart level if possible.",
+    "Press firmly on the wound with the cleanest cloth or dressing you have.",
+    "Maintain steady pressure for 15 full minutes without lifting the cloth to peek.",
+    "If blood soaks through, add another layer on top — do not remove the first.",
+    "Keep pressure on while you arrange transport to a clinic or hospital."
+  ],
+  "avoid": [
+    "Do not apply tourniquets unless trained and bleeding is life-threatening from a limb.",
+    "Do not remove embedded objects — press around them.",
+    "Do not give food or drink in case stitches or surgery are needed."
+  ],
+  "whenToEscalate": [
+    "Almost always — deep cuts usually need cleaning, possibly stitches, and a tetanus check.",
+    "Immediately if bleeding spurts, soaks through repeated dressings, or the person feels faint, cold, or clammy."
+  ],
+  "specialty": "Urgent care or emergency department.",
+  "sources": [
+    { "title": "Red Cross — severe bleeding" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

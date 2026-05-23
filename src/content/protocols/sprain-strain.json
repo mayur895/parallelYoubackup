@@ -1,0 +1,31 @@
+{
+  "id": "sprain-strain",
+  "title": "Sprain or strain (ankle, wrist, knee)",
+  "bodySystem": "pain",
+  "summary": "A sprain is an over-stretched ligament; a strain is an over-stretched muscle. Both respond to early R.I.C.E.",
+  "steps": [
+    "Rest the joint and avoid putting weight on it for the first 24–48 hours.",
+    "Ice the area for 15–20 minutes every 2–3 hours, using a cloth between ice and skin.",
+    "Compress with an elastic bandage — firm but not so tight it tingles.",
+    "Elevate the limb above heart level when sitting or lying down.",
+    "After 48 hours, begin gentle, pain-free movement."
+  ],
+  "avoid": [
+    "Do not apply heat in the first 48 hours.",
+    "Do not massage vigorously over the injury.",
+    "Do not return to sport or heavy activity until pain-free and the joint feels stable."
+  ],
+  "whenToEscalate": [
+    "You cannot put any weight on the joint, or it gives way.",
+    "There is an obvious deformity or you heard a snap or pop at the moment of injury.",
+    "Significant swelling, bruising, or numbness in the limb.",
+    "No improvement after 3–5 days of rest."
+  ],
+  "specialty": "Orthopaedic clinic or physiotherapist for persistent pain.",
+  "sources": [
+    { "title": "NHS — sprains and strains" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

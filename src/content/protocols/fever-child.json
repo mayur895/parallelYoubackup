@@ -1,0 +1,34 @@
+{
+  "id": "fever-child",
+  "title": "Fever in a child",
+  "bodySystem": "fever",
+  "summary": "Most childhood fevers come from common viral infections and pass in a few days. Comfort and hydration matter more than the exact temperature.",
+  "steps": [
+    "Offer small, frequent sips of water, milk (for nursing infants), or oral rehydration solution.",
+    "Dress in light clothing — one extra layer than what a comfortable adult would wear in the same room.",
+    "Keep the room cool but not cold. A fan on low can help.",
+    "A weight-based dose of children's paracetamol or ibuprofen (over 3 months) can be given if the child is uncomfortable.",
+    "Check on the child overnight and write down temperatures and times."
+  ],
+  "avoid": [
+    "Never give aspirin to anyone under 18.",
+    "Do not sponge with cold water or alcohol — both can cause shivering and shock.",
+    "Do not bundle a feverish child in thick blankets.",
+    "Do not combine multiple paracetamol-containing products."
+  ],
+  "whenToEscalate": [
+    "Any infant under 3 months with a temperature of 38°C / 100.4°F or higher.",
+    "A child of any age with a stiff neck, severe headache, a rash that does not fade under glass pressure, or persistent vomiting.",
+    "A child who is very drowsy, unusually still, or hard to wake.",
+    "A fever lasting more than 3 days or repeatedly returning.",
+    "A child with difficulty breathing, dehydration signs, or a seizure."
+  ],
+  "specialty": "Paediatrician or emergency department for any escalation sign.",
+  "sources": [
+    { "title": "NHS — fever in children" },
+    { "title": "WHO — paediatric fever" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

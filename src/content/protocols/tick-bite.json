@@ -1,0 +1,31 @@
+{
+  "id": "tick-bite",
+  "title": "Tick bite",
+  "bodySystem": "bites",
+  "summary": "Most tick bites are harmless, but some carry infections. Removing the tick quickly and completely is the most important step.",
+  "steps": [
+    "Use fine-tipped tweezers and grip the tick as close to the skin as possible.",
+    "Pull steadily and straight upward without twisting or jerking.",
+    "After removal, clean the area with soap and water or an antiseptic.",
+    "Wash your hands.",
+    "Write down the date and where on the body the bite was — useful if symptoms appear later."
+  ],
+  "avoid": [
+    "Do not burn the tick, smother it in petroleum jelly, or squeeze its body.",
+    "Do not panic if the mouthparts stay behind — they can be left to work out on their own like a splinter."
+  ],
+  "whenToEscalate": [
+    "A circular, expanding red rash around the bite over the next 3–30 days.",
+    "Flu-like symptoms: fever, chills, headache, joint or muscle aches in the weeks after the bite.",
+    "The tick was attached for longer than 24 hours.",
+    "You live in or travelled to an area known for tick-borne disease."
+  ],
+  "specialty": "General physician — mention the tick bite so they can consider testing or antibiotics.",
+  "sources": [
+    { "title": "NHS — tick bites" },
+    { "title": "CDC — tickborne diseases" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

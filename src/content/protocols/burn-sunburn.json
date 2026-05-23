@@ -1,0 +1,30 @@
+{
+  "id": "burn-sunburn",
+  "title": "Mild sunburn",
+  "bodySystem": "burns",
+  "summary": "Red, warm, tender skin without blisters that develops a few hours after sun exposure.",
+  "steps": [
+    "Get out of the sun and into a cool, shaded place.",
+    "Cool the skin with a cool shower or a damp cloth for 10–15 minutes.",
+    "Drink extra water — sunburn dehydrates.",
+    "Apply a fragrance-free moisturiser or pure aloe vera gel.",
+    "Wear loose, soft clothing over the area and avoid further sun until healed."
+  ],
+  "avoid": [
+    "Do not pop blisters or peel flaking skin.",
+    "Do not apply ice directly to the skin, or greasy ointments that trap heat.",
+    "Do not use products containing alcohol (they sting and dry the skin further)."
+  ],
+  "whenToEscalate": [
+    "Large blistered area, especially on the face, hands, or genitals.",
+    "Fever, chills, severe pain, headache, or confusion (possible heatstroke or sun poisoning).",
+    "Sunburn on an infant or young child."
+  ],
+  "specialty": "General physician; emergency department for any escalation sign.",
+  "sources": [
+    { "title": "NHS — sunburn" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

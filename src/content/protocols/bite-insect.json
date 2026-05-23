@@ -1,0 +1,30 @@
+{
+  "id": "bite-insect",
+  "title": "Insect bite or sting (non-severe)",
+  "bodySystem": "bites",
+  "summary": "Most insect bites cause local redness, itch, and swelling that settle in a few days.",
+  "steps": [
+    "If a sting is visible (e.g. honey bee), scrape it out sideways with a card edge — do not squeeze with tweezers.",
+    "Wash the area with clean water and soap.",
+    "Apply a cool compress for 10 minutes to reduce swelling and itch.",
+    "Keep the bitten limb elevated if possible.",
+    "Avoid scratching to prevent secondary infection."
+  ],
+  "avoid": [
+    "Do not apply mud, saliva, or unknown herbal pastes — risk of infection.",
+    "Do not break blisters."
+  ],
+  "whenToEscalate": [
+    "Swelling of the face, lips, tongue, or trouble breathing — this is an emergency.",
+    "A widespread rash, dizziness, or fainting after the bite.",
+    "A snake, scorpion, or unknown wild animal bite.",
+    "Redness spreading outward over hours, pus, or fever (infection)."
+  ],
+  "specialty": "General physician; emergency department for any escalation sign.",
+  "sources": [
+    { "title": "WHO — bites and stings" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

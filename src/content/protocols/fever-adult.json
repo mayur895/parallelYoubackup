@@ -1,0 +1,32 @@
+{
+  "id": "fever-adult",
+  "title": "Fever in an adult",
+  "bodySystem": "fever",
+  "summary": "A temperature above 37.8°C / 100°F is a sign your body is fighting an infection.",
+  "steps": [
+    "Rest and drink small sips of water frequently to stay hydrated.",
+    "Wear light clothing and keep the room comfortably cool.",
+    "A cool (not cold) damp cloth on the forehead can ease discomfort.",
+    "If needed, a labelled adult dose of paracetamol can be taken every 4–6 hours, not exceeding the daily maximum.",
+    "Check the temperature every 4 hours and write it down."
+  ],
+  "avoid": [
+    "Do not bundle up in heavy blankets — this can raise core temperature further.",
+    "Do not give aspirin to anyone under 18.",
+    "Do not combine multiple paracetamol-containing products.",
+    "Avoid alcohol while feverish."
+  ],
+  "whenToEscalate": [
+    "Temperature above 39.4°C / 103°F that does not come down with medication.",
+    "Fever lasting more than 3 days.",
+    "Fever with stiff neck, severe headache, rash that does not fade under pressure, confusion, or difficulty breathing.",
+    "Fever in someone who is pregnant, immunocompromised, or has a chronic illness."
+  ],
+  "specialty": "General physician; emergency department for any escalation sign.",
+  "sources": [
+    { "title": "NHS — fever in adults" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

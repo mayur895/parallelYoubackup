@@ -1,0 +1,31 @@
+{
+  "id": "dehydration",
+  "title": "Mild dehydration",
+  "bodySystem": "other",
+  "summary": "Thirst, dry mouth, headache, dark urine, and tiredness after illness, heat, or low fluid intake. Catching it early is straightforward.",
+  "steps": [
+    "Move to a cool, shaded place if you have been in the heat.",
+    "Sip oral rehydration solution (or 1 litre water + 6 teaspoons sugar + 1/2 teaspoon salt) slowly over the next hour.",
+    "For a small child, offer a teaspoon every 1–2 minutes if they will not drink larger amounts.",
+    "Remove extra layers and loosen tight clothing.",
+    "Rest for an hour and watch for improvement — urine should become pale yellow."
+  ],
+  "avoid": [
+    "Avoid sugary fizzy drinks alone — they can worsen diarrhoea.",
+    "Avoid alcohol and caffeine.",
+    "Do not gulp large amounts at once if nauseous — small sips are better."
+  ],
+  "whenToEscalate": [
+    "Confusion, fainting, very fast heartbeat, or seizures.",
+    "Sunken eyes, very dry mouth, no tears, or no urine for 8+ hours.",
+    "Dehydration in an infant, elderly person, or pregnant person.",
+    "No improvement after an hour of careful rehydration."
+  ],
+  "specialty": "General physician; emergency department for any escalation sign.",
+  "sources": [
+    { "title": "WHO — oral rehydration" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

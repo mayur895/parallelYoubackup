@@ -1,0 +1,33 @@
+{
+  "id": "burns-thermal-minor",
+  "title": "Minor thermal burn (1st degree / small 2nd degree)",
+  "bodySystem": "burns",
+  "summary": "Small, superficial burns are red, painful, and may blister. They usually heal at home.",
+  "steps": [
+    "Move away from the heat source immediately.",
+    "Cool the burn under cool (not ice-cold) running water for 20 minutes.",
+    "Remove jewellery, watches, and tight clothing near the burn before swelling starts.",
+    "Cover loosely with cling film (plastic wrap) or a clean, non-fluffy cloth.",
+    "A simple pain reliever such as paracetamol can be used by adults at the labelled dose."
+  ],
+  "avoid": [
+    "Do not apply butter, oil, toothpaste, ice, or ash to a burn.",
+    "Do not burst blisters.",
+    "Do not use sticky bandages that adhere to the wound."
+  ],
+  "whenToEscalate": [
+    "Burn is larger than the size of the person's palm.",
+    "Burn is on the face, hands, feet, genitals, or across a joint.",
+    "Burn looks white, leathery, or charred (deep burn).",
+    "Burn is from a chemical, electrical source, or from inhalation of hot smoke.",
+    "Burn is on a child, infant, or elderly person."
+  ],
+  "specialty": "Burn unit or emergency department for any of the above; otherwise general physician.",
+  "sources": [
+    { "title": "Red Cross — burns" },
+    { "title": "WHO — burn first aid" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

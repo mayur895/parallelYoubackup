@@ -1,0 +1,31 @@
+{
+  "id": "panic-attack",
+  "title": "Panic attack",
+  "bodySystem": "other",
+  "summary": "A sudden surge of intense fear with pounding heart, fast breathing, tingling, sweating, and a sense of unreality. Frightening but not dangerous.",
+  "steps": [
+    "Find a safe place to sit. Acknowledge what is happening: \"this is a panic attack and it will pass.\"",
+    "Slow the breath: inhale through the nose for 4 seconds, hold for 2, exhale through the mouth for 6 seconds. Repeat for 2–3 minutes.",
+    "Ground yourself: name 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste.",
+    "Sip cool water slowly.",
+    "Once the wave passes, rest and eat something simple. Tell someone you trust."
+  ],
+  "avoid": [
+    "Do not fight or run — panic peaks within 10 minutes and naturally fades.",
+    "Avoid breathing into a paper bag — this is no longer recommended.",
+    "Avoid caffeine, alcohol, and nicotine after an attack — they raise the risk of another."
+  ],
+  "whenToEscalate": [
+    "If chest pain spreads to the arm or jaw, or breathing does not return to normal within 20 minutes — treat as a possible heart attack and seek emergency care.",
+    "Recurring panic attacks that disrupt daily life — speak to a doctor about treatment options.",
+    "Thoughts of self-harm during or after an attack — reach a crisis line or emergency services."
+  ],
+  "specialty": "General physician or mental health professional.",
+  "sources": [
+    { "title": "NHS — panic disorder" },
+    { "title": "WHO — mental health first aid" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

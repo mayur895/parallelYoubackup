@@ -1,0 +1,33 @@
+{
+  "id": "bleeding-minor",
+  "title": "Minor cut, scrape, or graze",
+  "bodySystem": "bleeding",
+  "summary": "Small wounds with light bleeding usually heal well with cleaning and pressure.",
+  "steps": [
+    "Wash your hands with clean water and soap if available.",
+    "Rinse the wound under clean running water for at least 1 minute to remove dirt.",
+    "Pat dry with a clean cloth. Do not rub.",
+    "Apply firm, steady pressure with a clean cloth or gauze until bleeding stops (usually 5–10 minutes).",
+    "Cover with a clean dressing or adhesive bandage.",
+    "Change the dressing once a day or whenever it becomes wet or dirty."
+  ],
+  "avoid": [
+    "Do not apply turmeric, ash, toothpaste, or other home pastes inside the wound.",
+    "Do not remove a deeply embedded object — press around it instead.",
+    "Do not blow on the wound."
+  ],
+  "whenToEscalate": [
+    "Bleeding does not stop after 10 minutes of firm pressure.",
+    "The cut is deeper than 0.5 cm, gapes open, or you can see fat / muscle / bone.",
+    "The wound is from a dirty or rusty object and you have not had a tetanus shot in 5+ years.",
+    "Redness, swelling, warmth, pus, or fever appears in the next 1–2 days (signs of infection)."
+  ],
+  "specialty": "General physician or nearest urgent care clinic.",
+  "sources": [
+    { "title": "WHO basic first aid" },
+    { "title": "Red Cross — wound care" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

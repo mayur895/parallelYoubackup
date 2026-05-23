@@ -838,9 +838,9 @@ function PlanView({ protocol, routing, severity, ageBand, onRestart, onRepick }:
           style={secondaryButton}>Copy plan</button>
       </div>
 
-      {protocol.references.length > 0 && (
+      {protocol.sources.length > 0 && (
         <div style={{ marginTop: 20, fontSize: 12, color: T.textSoft }}>
-          Based on: {protocol.references.join(' · ')}
+          Based on: {protocol.sources.map((s) => s.title).join(' · ')}
         </div>
       )}
     </section>

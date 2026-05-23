@@ -1,0 +1,32 @@
+{
+  "id": "mild-allergic-skin",
+  "title": "Mild allergic skin reaction (hives, itchy rash)",
+  "bodySystem": "other",
+  "summary": "Raised, itchy bumps or red blotches that come on within minutes to hours of contact with a trigger.",
+  "steps": [
+    "Move away from any obvious trigger (new food, plant, soap, fabric, medication).",
+    "Wash the skin with cool water and mild soap if a contact substance is suspected.",
+    "Apply a cool, damp cloth to the rash for 10 minutes to ease itching.",
+    "An over-the-counter oral antihistamine, at the labelled dose, can reduce itching and hives.",
+    "Wear loose cotton clothing and keep the area cool and dry."
+  ],
+  "avoid": [
+    "Do not scratch — broken skin can become infected.",
+    "Do not apply heat or hot water to itchy skin.",
+    "Avoid the suspected trigger until you can identify it safely."
+  ],
+  "whenToEscalate": [
+    "Swelling of the face, lips, tongue, or trouble breathing — this is anaphylaxis, an emergency.",
+    "Hives covering most of the body, dizziness, or fainting.",
+    "Rash with fever, joint pain, or that bruises or blisters.",
+    "Rash lasting more than 6 weeks."
+  ],
+  "specialty": "General physician or allergist; emergency department for any escalation sign.",
+  "sources": [
+    { "title": "NHS — hives" },
+    { "title": "NHS — allergies" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

@@ -1,0 +1,30 @@
+{
+  "id": "sore-throat",
+  "title": "Mild sore throat",
+  "bodySystem": "breathing",
+  "summary": "A scratchy or painful throat that hurts when swallowing — most often viral and clears within a week.",
+  "steps": [
+    "Gargle with warm salt water (1/2 teaspoon salt in a glass of warm water) several times a day.",
+    "Sip warm fluids — water, broth, tea with honey for adults and children over 1 year.",
+    "Suck on a throat lozenge or a piece of hard candy (not for young children).",
+    "Rest your voice. Avoid shouting or whispering for long periods.",
+    "An adult dose of paracetamol or ibuprofen can ease pain."
+  ],
+  "avoid": [
+    "Avoid smoke, alcohol, and very dry indoor air.",
+    "Do not share cups or utensils with others."
+  ],
+  "whenToEscalate": [
+    "Drooling, severe pain on one side, or inability to swallow saliva.",
+    "White patches on the tonsils with high fever — may need antibiotics.",
+    "Throat pain lasting more than 7 days, or returning often.",
+    "Trouble breathing, swelling of the neck or tongue — emergency."
+  ],
+  "specialty": "General physician.",
+  "sources": [
+    { "title": "NHS — sore throat" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

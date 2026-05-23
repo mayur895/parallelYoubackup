@@ -1,0 +1,31 @@
+{
+  "id": "nosebleed",
+  "title": "Nosebleed",
+  "bodySystem": "bleeding",
+  "summary": "Most nosebleeds come from the front of the nose and stop with simple pressure.",
+  "steps": [
+    "Sit upright and lean slightly forward (not backward).",
+    "Pinch the soft part of the nose, just below the bony bridge, firmly closed.",
+    "Hold for 10 full minutes without checking.",
+    "Breathe through the mouth. Spit out blood that reaches the mouth.",
+    "After 10 minutes, release slowly. If bleeding continues, repeat once for another 10 minutes."
+  ],
+  "avoid": [
+    "Do not tilt the head back — blood running down the throat can cause vomiting.",
+    "Do not pack the nose with cotton or tissue.",
+    "Avoid blowing the nose or strenuous activity for 24 hours."
+  ],
+  "whenToEscalate": [
+    "Bleeding has not stopped after 20 minutes of continuous pressure.",
+    "The nosebleed followed a strong blow to the head or face.",
+    "The person is on blood-thinning medication.",
+    "Frequent, repeated nosebleeds over several weeks."
+  ],
+  "specialty": "General physician or ENT specialist for repeated nosebleeds.",
+  "sources": [
+    { "title": "NHS — nosebleeds" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

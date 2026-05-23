@@ -1,0 +1,30 @@
+{
+  "id": "earache",
+  "title": "Earache",
+  "bodySystem": "pain",
+  "summary": "Ear pain in adults is often due to a cold, jaw tension, or wax. In children, ear infections are common after a cold.",
+  "steps": [
+    "Apply a warm cloth or warm water bottle (wrapped) to the outside of the ear for 15 minutes.",
+    "Sit upright — lying flat can worsen pressure pain.",
+    "A simple adult dose of paracetamol or ibuprofen can ease pain.",
+    "For young children, follow the dose on the children's paracetamol or ibuprofen label by age and weight.",
+    "Keep the ear dry — do not get water in it while bathing."
+  ],
+  "avoid": [
+    "Do not put cotton buds, oil, or anything else inside the ear canal.",
+    "Do not fly or scuba dive with an unresolved earache."
+  ],
+  "whenToEscalate": [
+    "Discharge of pus or blood from the ear.",
+    "Severe pain, swelling behind the ear, or a high fever.",
+    "Hearing loss that does not return after a few days.",
+    "Earache in a child under 2, or any child who is unusually drowsy or unwell."
+  ],
+  "specialty": "General physician or ENT specialist.",
+  "sources": [
+    { "title": "NHS — earache" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

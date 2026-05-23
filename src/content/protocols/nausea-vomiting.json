@@ -1,0 +1,30 @@
+{
+  "id": "nausea-vomiting",
+  "title": "Mild nausea or short-lived vomiting",
+  "bodySystem": "other",
+  "summary": "Most short episodes of nausea or vomiting (under 24 hours) settle with rest and small sips of fluid.",
+  "steps": [
+    "Stop solid food for a few hours. Sit upright and rest.",
+    "Sip small amounts of clear fluid (water, oral rehydration solution) every 10–15 minutes.",
+    "Once vomiting has settled for 4–6 hours, try bland foods: dry toast, plain rice, banana, plain crackers.",
+    "Rest in a cool, quiet room. Avoid strong smells."
+  ],
+  "avoid": [
+    "Do not drink large amounts at once — this often triggers more vomiting.",
+    "Avoid dairy, fatty foods, alcohol, caffeine, and spicy food for 24 hours."
+  ],
+  "whenToEscalate": [
+    "Cannot keep any fluid down for more than 8 hours.",
+    "Signs of dehydration: very dark urine, dizziness on standing, dry mouth, sunken eyes.",
+    "Vomit contains blood or looks like coffee grounds.",
+    "Severe abdominal pain, high fever, or vomiting after a head injury.",
+    "In infants, children, pregnant people, or elderly — seek care early."
+  ],
+  "specialty": "General physician; emergency department for any escalation sign.",
+  "sources": [
+    { "title": "NHS — nausea and vomiting" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

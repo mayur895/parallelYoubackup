@@ -1,0 +1,30 @@
+{
+  "id": "headache-tension",
+  "title": "Tension-type headache",
+  "bodySystem": "pain",
+  "summary": "A dull, band-like pressure around the head, often related to stress, posture, dehydration, or eye strain.",
+  "steps": [
+    "Drink a full glass of water — mild dehydration is a common trigger.",
+    "Move to a quiet, dimly lit room and rest for 15–30 minutes.",
+    "Apply a cool cloth to the forehead or a warm compress to the neck and shoulders.",
+    "Gentle neck and shoulder stretches can release tension.",
+    "A labelled adult dose of paracetamol or ibuprofen may help if no contraindication."
+  ],
+  "avoid": [
+    "Avoid using painkillers more than 2–3 days a week to prevent rebound headaches.",
+    "Limit screen time and caffeine."
+  ],
+  "whenToEscalate": [
+    "The worst headache of your life, or a sudden \"thunderclap\" onset.",
+    "Headache with fever, stiff neck, rash, confusion, weakness, vision change, or after a head injury.",
+    "Headache that wakes you from sleep or steadily worsens over days.",
+    "Headache during pregnancy with vision changes or severe swelling."
+  ],
+  "specialty": "General physician; emergency department for any escalation sign.",
+  "sources": [
+    { "title": "NHS — headaches" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

@@ -1,0 +1,32 @@
+{
+  "id": "abdominal-pain-mild",
+  "title": "Mild stomach pain or cramps",
+  "bodySystem": "pain",
+  "summary": "Generalised, crampy stomach pain that comes and goes — often related to gas, indigestion, or a mild stomach bug.",
+  "steps": [
+    "Sit or lie down comfortably and rest the abdomen.",
+    "Sip small amounts of plain water or weak warm tea.",
+    "Apply a warm cloth or hot water bottle (wrapped in a towel) to the belly.",
+    "Try a simple bland diet for the next 24 hours — rice, banana, toast, plain yoghurt.",
+    "Pass wind or have a bowel movement if you can — both often relieve gas pain."
+  ],
+  "avoid": [
+    "Avoid spicy, fatty, very rich, or fried food until pain settles.",
+    "Avoid alcohol, caffeine, and large meals.",
+    "Do not take strong painkillers like ibuprofen on an empty, irritated stomach."
+  ],
+  "whenToEscalate": [
+    "Severe, constant pain in one specific area (especially the lower right side).",
+    "Pain with vomiting blood, black stools, or fainting.",
+    "Pain with high fever, a rigid hard belly, or pain on releasing pressure.",
+    "In pregnancy — any new significant abdominal pain.",
+    "Pain that wakes you from sleep or lasts more than 24 hours without easing."
+  ],
+  "specialty": "General physician; emergency department for any escalation sign.",
+  "sources": [
+    { "title": "NHS — stomach ache" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

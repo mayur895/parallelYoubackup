@@ -1,0 +1,32 @@
+{
+  "id": "back-pain-acute",
+  "title": "Sudden lower back pain (muscle strain)",
+  "bodySystem": "pain",
+  "summary": "Most acute lower back pain is a muscle or ligament strain and improves within 2 weeks with gentle movement.",
+  "steps": [
+    "Keep gently moving — short, slow walks help. Avoid total bed rest beyond 1–2 days.",
+    "Apply a warm compress or take a warm shower to relax tight muscles.",
+    "Lie on your back with a pillow under your knees, or on your side with a pillow between your knees, when resting.",
+    "An adult dose of ibuprofen or paracetamol can reduce pain.",
+    "Once pain eases, begin gentle stretches and core exercises."
+  ],
+  "avoid": [
+    "Do not lift heavy objects or twist suddenly.",
+    "Do not lie flat on your back without support under the knees.",
+    "Do not use heat on the very first day if there is swelling or bruising — use cold instead."
+  ],
+  "whenToEscalate": [
+    "Numbness, tingling, or weakness in one or both legs.",
+    "Loss of control of the bladder or bowels — emergency.",
+    "Severe pain after a fall or strong impact.",
+    "Pain with fever, unexplained weight loss, or pain that wakes you at night.",
+    "No improvement after 2 weeks of self-care."
+  ],
+  "specialty": "General physician or physiotherapist; emergency department for any escalation sign.",
+  "sources": [
+    { "title": "NHS — back pain" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

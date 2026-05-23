@@ -1,0 +1,31 @@
+{
+  "id": "cough-cold",
+  "title": "Common cold or mild cough",
+  "bodySystem": "breathing",
+  "summary": "A runny nose, sneeze, mild sore throat, and dry cough lasting a few days. Usually viral; rest is the main treatment.",
+  "steps": [
+    "Rest as much as you can. Sleep is your body's strongest tool.",
+    "Drink warm fluids: water, broth, herbal tea with honey (not for children under 1 year).",
+    "Use a saline spray or warm steam inhalation to ease nasal stuffiness.",
+    "A simple adult dose of paracetamol or ibuprofen can ease aches and low fever.",
+    "Cover your mouth when you cough or sneeze and wash hands often to protect others."
+  ],
+  "avoid": [
+    "Antibiotics do nothing for viral colds — do not request them.",
+    "Avoid cough syrups in children under 6 unless a doctor has prescribed them.",
+    "Avoid smoking and second-hand smoke, which worsen the cough."
+  ],
+  "whenToEscalate": [
+    "Cough lasting more than 3 weeks.",
+    "Difficulty breathing, wheezing, chest pain, or coughing up blood.",
+    "High fever above 39°C / 102°F that does not settle.",
+    "Symptoms in an infant under 3 months, the elderly, or someone with a chronic chest condition."
+  ],
+  "specialty": "General physician.",
+  "sources": [
+    { "title": "NHS — common cold" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

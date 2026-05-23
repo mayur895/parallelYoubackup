@@ -1,0 +1,31 @@
+{
+  "id": "toothache",
+  "title": "Toothache",
+  "bodySystem": "pain",
+  "summary": "A dental ache usually points to decay, an abscess, or gum irritation. Self-care eases pain until you can reach a dentist.",
+  "steps": [
+    "Rinse the mouth with warm salt water (1/2 teaspoon salt in a glass of warm water).",
+    "Use dental floss gently to remove any trapped food between teeth.",
+    "Apply a cold compress to the cheek over the painful area for 15 minutes at a time.",
+    "An adult dose of paracetamol or ibuprofen can ease pain. Avoid placing tablets directly on the gum.",
+    "Eat soft, room-temperature foods. Avoid very hot, very cold, or sugary food."
+  ],
+  "avoid": [
+    "Do not place aspirin against the gum — it burns the tissue.",
+    "Do not chew on the painful side.",
+    "Avoid clove-oil \"cures\" applied undiluted directly to the gum."
+  ],
+  "whenToEscalate": [
+    "Swelling of the face, jaw, or neck.",
+    "Difficulty opening the mouth, swallowing, or breathing — emergency.",
+    "Fever along with toothache.",
+    "Pain lasting more than 2 days."
+  ],
+  "specialty": "Dentist; emergency department for facial swelling or breathing trouble.",
+  "sources": [
+    { "title": "NHS — toothache" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}
