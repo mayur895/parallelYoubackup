@@ -48,20 +48,28 @@ const result = await VLMWorkerBridge.shared.process(rgbPixels, width, height, 'D
 
 ```
 src/
-├── main.tsx              # React root
-├── App.tsx               # Tab navigation (Chat | Vision | Voice)
-├── runanywhere.ts        # SDK init + model catalog + VLM worker
+├── main.tsx                  # React root + service-worker registration
+├── App.tsx                   # Mounts TendTab + offline indicator + model prefetch
+├── runanywhere.ts            # On-device model SDK init + catalog
 ├── workers/
-│   └── vlm-worker.ts     # VLM Web Worker entry (2 lines)
+│   └── vlm-worker.ts         # (reserved for future VLM use)
 ├── hooks/
-│   └── useModelLoader.ts # Shared model download/load hook
+│   └── useModelLoader.ts     # Shared model download/load hook
+├── engine/
+│   └── triageEngine.ts       # Protocols, red-flag rules, LLM routing prompt+parser
+├── data/
+│   └── nearbyCare.ts         # Ladakh care-facility directory
 ├── components/
-│   ├── ChatTab.tsx        # LLM streaming chat
-│   ├── VisionTab.tsx      # Camera + VLM inference
-│   ├── VoiceTab.tsx       # Full voice pipeline
-│   └── ModelBanner.tsx    # Download progress UI
+│   ├── TendTab.tsx           # Main Tend triage UI (phase machine)
+│   ├── MarketingLanding.tsx  # Intro screen
+│   ├── NearbyCare.tsx        # Nearest-facility card
+│   ├── OfflineIndicator.tsx  # Online/offline toast
+│   ├── DownloadAllModels.tsx # Prefetch button
+│   ├── ModelBanner.tsx       # Shared download-progress UI
+│   ├── HeroIllustration.tsx  # Landing hero SVG
+│   └── Personas.tsx          # Landing personas section
 └── styles/
-    └── index.css          # Dark theme CSS
+    └── index.css             # Global dark theme + range slider
 ```
 
 ## Adding Your Own Models
