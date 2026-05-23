@@ -26,8 +26,8 @@
   ],
   "specialty": "Emergency department or trauma centre — immediate transport.",
   "sources": [
-    { "title": "Red Cross — severe bleeding and tourniquet use" },
-    { "title": "IFRC International First Aid Guidelines 2020 — severe bleeding" },
+    { "title": "Red Cross — severe bleeding and tourniquet use", "url": "https://www.redcross.org.uk/first-aid/learn-first-aid/bleeding-heavily", "accessedOn": "2026-05-23" },
+    { "title": "IFRC International First Aid Guidelines 2020 — severe bleeding", "url": "https://www.ifrc.org/document/international-first-aid-resuscitation-and-education-guidelines", "accessedOn": "2026-05-23" },
     { "title": "WHO Basic Emergency Care — external haemorrhage", "url": "https://www.who.int/publications-detail-redirect/basic-emergency-care-approach-to-the-acutely-ill-and-injured", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,

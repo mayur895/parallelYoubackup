@@ -24,8 +24,8 @@
   ],
   "specialty": "Emergency department / paediatric emergency immediately.",
   "sources": [
-    { "title": "Red Cross — infant choking" },
-    { "title": "Resuscitation Council UK — paediatric choking" },
+    { "title": "Red Cross — infant choking", "url": "https://www.redcross.org.uk/first-aid/learn-first-aid-for-babies-and-children/choking-baby", "accessedOn": "2026-05-23" },
+    { "title": "Resuscitation Council UK — paediatric choking", "url": "https://www.resus.org.uk/library/additional-guidance/guidance-choking", "accessedOn": "2026-05-23" },
     { "title": "WHO Pocket book of hospital care for children — choking", "url": "https://www.who.int/publications/i/item/978-92-4-154837-3", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,

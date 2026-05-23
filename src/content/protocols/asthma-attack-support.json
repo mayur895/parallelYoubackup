@@ -28,7 +28,7 @@
   "sources": [
     { "title": "WHO — asthma management", "url": "https://www.who.int/news-room/fact-sheets/detail/asthma", "accessedOn": "2026-05-23" },
     { "title": "NHS — asthma attack first aid", "url": "https://www.nhs.uk/conditions/asthma/asthma-attack/", "accessedOn": "2026-05-23" },
-    { "title": "St John Ambulance — asthma" }
+    { "title": "St John Ambulance — asthma", "url": "https://www.sja.org.uk/first-aid-advice/asthma-attack/", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

@@ -21,7 +21,7 @@
   ],
   "specialty": "Urgent care or emergency department.",
   "sources": [
-    { "title": "Red Cross — severe bleeding" }
+    { "title": "Red Cross — severe bleeding", "url": "https://www.redcross.org.uk/first-aid/learn-first-aid/bleeding-heavily", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

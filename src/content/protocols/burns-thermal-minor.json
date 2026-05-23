@@ -24,7 +24,7 @@
   ],
   "specialty": "Burn unit or emergency department for any of the above; otherwise general physician.",
   "sources": [
-    { "title": "Red Cross — burns" },
+    { "title": "Red Cross — burns", "url": "https://www.redcross.org.uk/first-aid/learn-first-aid/burns", "accessedOn": "2026-05-23" },
     { "title": "WHO — burn first aid", "url": "https://www.who.int/news-room/fact-sheets/detail/burns", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,

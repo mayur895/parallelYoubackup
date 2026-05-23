@@ -26,9 +26,9 @@
   ],
   "specialty": "Local high-altitude clinic; emergency descent + hospital for HACE / HAPE.",
   "sources": [
-    { "title": "Wilderness Medical Society — acute altitude illness guidelines" },
+    { "title": "Wilderness Medical Society — acute altitude illness guidelines", "url": "https://journals.sagepub.com/doi/10.1016/j.wem.2023.05.013", "accessedOn": "2026-05-23" },
     { "title": "Indian Army Medical Corps — high-altitude illness manual" },
-    { "title": "UIAA Medical Commission — altitude illness recommendations" }
+    { "title": "UIAA Medical Commission — altitude illness recommendations", "url": "https://theuiaa.org/documents/safety/UIAA_Medical_AltitudeSickness.pdf", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

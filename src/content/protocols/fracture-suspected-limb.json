@@ -25,10 +25,10 @@
   ],
   "specialty": "Orthopaedic clinic or emergency department.",
   "sources": [
-    { "title": "Red Cross — fractures" },
+    { "title": "Red Cross — fractures", "url": "https://www.redcross.org.uk/first-aid/learn-first-aid/broken-bone", "accessedOn": "2026-05-23" },
     { "title": "NHS — broken arm or wrist", "url": "https://www.nhs.uk/conditions/broken-arm-or-wrist/", "accessedOn": "2026-05-23" },
     { "title": "NHS — broken leg", "url": "https://www.nhs.uk/conditions/broken-leg/", "accessedOn": "2026-05-23" },
-    { "title": "St John Ambulance — fractures" }
+    { "title": "St John Ambulance — fractures", "url": "https://www.sja.org.uk/first-aid-advice/fractures-and-broken-bones/", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

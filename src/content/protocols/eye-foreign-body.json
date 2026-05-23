@@ -27,7 +27,7 @@
   "specialty": "Eye casualty / ophthalmology; emergency department for embedded or high-speed injuries.",
   "sources": [
     { "title": "NHS — eye injuries first aid", "url": "https://www.nhs.uk/conditions/eye-injuries/", "accessedOn": "2026-05-23" },
-    { "title": "St John Ambulance — foreign object in the eye" }
+    { "title": "St John Ambulance — foreign object in the eye", "url": "https://www.sja.org.uk/get-advice/first-aid-advice/minor-illnesses-and-injuries/eye-injuries/", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

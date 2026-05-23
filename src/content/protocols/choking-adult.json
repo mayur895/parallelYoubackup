@@ -25,9 +25,9 @@
   ],
   "specialty": "Emergency department for any choking that required intervention.",
   "sources": [
-    { "title": "Red Cross — adult choking" },
-    { "title": "Resuscitation Council UK — choking guideline" },
-    { "title": "St John Ambulance — choking adult" }
+    { "title": "Red Cross — adult choking", "url": "https://www.redcross.org.uk/first-aid/learn-first-aid/choking", "accessedOn": "2026-05-23" },
+    { "title": "Resuscitation Council UK — choking guideline", "url": "https://www.resus.org.uk/library/additional-guidance/guidance-choking", "accessedOn": "2026-05-23" },
+    { "title": "St John Ambulance — choking adult", "url": "https://www.sja.org.uk/get-advice/first-aid-advice/choking/adult-choking/", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

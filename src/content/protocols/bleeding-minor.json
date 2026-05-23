@@ -25,7 +25,7 @@
   "specialty": "General physician or nearest urgent care clinic.",
   "sources": [
     { "title": "WHO basic first aid", "url": "https://www.who.int/publications-detail-redirect/basic-emergency-care-approach-to-the-acutely-ill-and-injured", "accessedOn": "2026-05-23" },
-    { "title": "Red Cross — wound care" }
+    { "title": "Red Cross — wound care", "url": "https://www.redcross.org.uk/first-aid/learn-first-aid/bleeding-heavily", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

@@ -26,7 +26,7 @@
   "specialty": "General physician or emergency department for any escalation sign.",
   "sources": [
     { "title": "NHS — head injury", "url": "https://www.nhs.uk/conditions/head-injury-and-concussion/", "accessedOn": "2026-05-23" },
-    { "title": "St John Ambulance — head injury" }
+    { "title": "St John Ambulance — head injury", "url": "https://www.sja.org.uk/first-aid-advice/head-injury/", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,
