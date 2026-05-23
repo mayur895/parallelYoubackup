@@ -51,6 +51,10 @@ export interface Protocol {
   whenToEscalate: string[];
   specialty: string; // recommended professional follow-up
   sources: SourceRef[];
+  /** Medical reviewer who signed off on the content. Null until reviewed. */
+  reviewedBy: string | null;
+  /** ISO date string of the last review. Null until reviewed. */
+  reviewedOn: string | null;
 }
 
 export interface RedFlag {

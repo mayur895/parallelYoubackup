@@ -34,6 +34,8 @@ function loadAll(): Protocol[] {
       whenToEscalate: parsed.whenToEscalate,
       specialty: parsed.specialty,
       sources: parsed.sources,
+      reviewedBy: parsed.reviewedBy,
+      reviewedOn: parsed.reviewedOn,
     });
   }
 
