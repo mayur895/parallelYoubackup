@@ -1,0 +1,34 @@
+{
+  "id": "embedded-object-wound",
+  "title": "Object stuck in a wound (glass, metal, splinter)",
+  "bodySystem": "bleeding",
+  "summary": "Something is embedded in the skin or deeper tissue. Removing it can cause much worse bleeding. Stabilise it and seek medical care.",
+  "steps": [
+    "Do not pull or wiggle the object — it may be pressing on a blood vessel and stopping bleeding.",
+    "Sit or lie the person down. Keep them still.",
+    "Press firmly around the object — not on top of it — using a clean cloth folded around the object on both sides.",
+    "If possible, build up padding around the object so the cloth or bandage does not press the object deeper.",
+    "Cover the area loosely with a clean dressing without disturbing the object.",
+    "Keep the limb still. Support it with a sling, pillow, or rolled cloth.",
+    "Arrange urgent transport to a clinic or hospital."
+  ],
+  "avoid": [
+    "Do not pull out the embedded object, even if it looks small.",
+    "Do not press directly on top of the object.",
+    "Do not give food or drink in case surgery or stitches are needed.",
+    "Do not apply ointments, pastes, or home remedies to the wound."
+  ],
+  "whenToEscalate": [
+    "Always — embedded objects need professional cleaning and removal under sterile conditions.",
+    "Immediately if there is heavy bleeding, the object is in the eye, neck, chest, or abdomen, or if the person feels faint or cold and clammy.",
+    "A tetanus check is needed if vaccination is not up to date."
+  ],
+  "specialty": "Urgent care or emergency department.",
+  "sources": [
+    { "title": "Red Cross — embedded objects" },
+    { "title": "St John Ambulance — foreign object in a wound" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

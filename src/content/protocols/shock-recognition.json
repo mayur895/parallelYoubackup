@@ -1,0 +1,36 @@
+{
+  "id": "shock-recognition",
+  "title": "Recognising and responding to circulatory shock",
+  "bodySystem": "other",
+  "summary": "Shock is when the body's circulation cannot keep up with what it needs. Pale, cold, sweaty skin, fast weak pulse, fast breathing, thirst, drowsiness, or fainting after blood loss, severe injury, severe burn, severe allergic reaction, or major infection. It can kill quickly without treatment.",
+  "steps": [
+    "Call for emergency help immediately. Shock will not get better with first aid alone.",
+    "Treat the obvious cause if you can: stop heavy bleeding with pressure, lay the person flat if they fainted, give their adrenaline pen if they have one and are having anaphylaxis (and they or a trained helper can do it).",
+    "Lay the person on their back. If safe and there is no spinal injury, raise their legs about 30 cm to help blood return to the chest.",
+    "Loosen tight clothing around the neck, chest, and waist.",
+    "Keep them warm — cover with a blanket or jacket, including underneath to insulate from cold ground.",
+    "Reassure them. Speak calmly and explain that help is on the way.",
+    "Watch breathing and responsiveness continuously. Be ready to turn them on their side if they vomit, and to start CPR if they stop breathing."
+  ],
+  "avoid": [
+    "Do not give food or drink, not even small sips — they may need urgent surgery or anaesthesia.",
+    "Do not let them stand up or walk around.",
+    "Do not use hot water bottles, electric blankets, or fires to warm them — passive warmth (blankets) only.",
+    "Do not delay calling emergency by 'waiting to see if it gets better'."
+  ],
+  "whenToEscalate": [
+    "Always emergency — every case of suspected shock needs hospital care.",
+    "Especially urgent if combined with: heavy bleeding, severe burn, suspected internal injury, allergic reaction (anaphylaxis), severe vomiting and diarrhoea, severe infection with fever, or chest pain.",
+    "Even if the person 'looks better' after lying down — they still need to be seen.",
+    "Pregnant people, infants, elderly, and anyone on blood thinners — extra urgent."
+  ],
+  "specialty": "Emergency department immediately.",
+  "sources": [
+    { "title": "Red Cross — recognising shock" },
+    { "title": "WHO Basic Emergency Care — shock" },
+    { "title": "St John Ambulance — shock" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

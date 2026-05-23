@@ -1,0 +1,35 @@
+{
+  "id": "fracture-suspected-limb",
+  "title": "Suspected broken bone in an arm or leg",
+  "bodySystem": "pain",
+  "summary": "Severe pain, swelling, deformity, or inability to use a limb after an injury suggests a possible fracture. Stop using it, immobilise it, and get to medical care.",
+  "steps": [
+    "Keep the person still and reassure them.",
+    "Do not try to straighten or push back a bone — support the limb in the position you found it.",
+    "Steady the limb above and below the suspected break with your hands, or with rolled cloths, towels, or a folded magazine taped beside the limb as a splint.",
+    "For an arm injury, support the arm against the body with a sling made from a triangular cloth, or rest it on a cushion in the lap.",
+    "For a leg injury, do not let the person walk on it. Pad between the legs and gently bind the injured leg to the uninjured one if transport is long.",
+    "Apply a cold pack wrapped in a cloth for 15–20 minutes to reduce swelling.",
+    "Arrange transport to a clinic or emergency department. Keep the person warm and do not give food or drink in case anaesthesia is needed."
+  ],
+  "avoid": [
+    "Do not try to push a bone back under the skin if it is sticking out — cover it with a clean cloth and go to emergency.",
+    "Do not give the person food or drink.",
+    "Do not move them unnecessarily, especially if the back, neck, or hip might be injured.",
+    "Do not apply heat to a fresh injury for the first 24–48 hours."
+  ],
+  "whenToEscalate": [
+    "Always — suspected fractures need an X-ray and proper alignment.",
+    "Emergency immediately if: bone is showing through the skin, the limb looks deformed, the hand or foot below the injury is cold, blue, or numb, or there is heavy bleeding.",
+    "Suspected hip, pelvis, spine, or skull fracture — do not move the person unless absolutely necessary; call emergency."
+  ],
+  "specialty": "Orthopaedic clinic or emergency department.",
+  "sources": [
+    { "title": "Red Cross — fractures" },
+    { "title": "NHS — broken arm or wrist / broken leg" },
+    { "title": "St John Ambulance — fractures" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

@@ -1,0 +1,35 @@
+{
+  "id": "choking-adult",
+  "title": "Choking adult or child over 1 year",
+  "bodySystem": "breathing",
+  "summary": "A blocked airway is a life-threatening emergency. Mild choking means they can still cough or speak; severe choking means they cannot.",
+  "steps": [
+    "Ask: 'Are you choking?' If they can speak, cough, or breathe — encourage them to keep coughing forcefully. Do not interfere yet.",
+    "If they cannot speak, cough, or breathe — call for emergency help immediately, then act.",
+    "Lean them forward. Give up to 5 firm back blows between the shoulder blades with the heel of your hand. Check after each blow to see if the blockage cleared.",
+    "If back blows fail, give up to 5 abdominal thrusts: stand behind them, place a fist just above the navel, cover with your other hand, and pull sharply inward and upward. Check after each thrust.",
+    "Keep alternating 5 back blows and 5 abdominal thrusts until the object is dislodged, the person can breathe, or they become unconscious.",
+    "If they become unconscious, lower them gently to the floor. Start CPR if you are trained — chest compressions can also dislodge the object.",
+    "Anyone who has had abdominal thrusts must be seen by a doctor afterwards — internal injury is possible."
+  ],
+  "avoid": [
+    "Do not slap a coughing person on the back if they can still cough effectively — let them clear it themselves.",
+    "Do not give abdominal thrusts to an infant under 1 year or a visibly pregnant person — use chest thrusts instead.",
+    "Do not try to pull the object out with your fingers unless you can see it clearly and reach it easily — blind finger sweeps can push it deeper.",
+    "Do not give the person food or drink after a choking episode until checked by a doctor."
+  ],
+  "whenToEscalate": [
+    "Always emergency — call for help the moment a person cannot breathe, cough, or speak.",
+    "Even if the blockage clears, see a doctor if abdominal thrusts were given, if pain continues, if they have trouble swallowing, or if they coughed up blood.",
+    "Anyone who lost consciousness — emergency department immediately."
+  ],
+  "specialty": "Emergency department for any choking that required intervention.",
+  "sources": [
+    { "title": "Red Cross — adult choking" },
+    { "title": "Resuscitation Council UK — choking guideline" },
+    { "title": "St John Ambulance — choking adult" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

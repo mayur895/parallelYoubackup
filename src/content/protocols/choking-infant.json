@@ -1,0 +1,34 @@
+{
+  "id": "choking-infant",
+  "title": "Choking infant (under 1 year)",
+  "bodySystem": "breathing",
+  "summary": "A choking baby is a life-threatening emergency. Technique is different from adults — never use abdominal thrusts on an infant.",
+  "steps": [
+    "Call for emergency help immediately. If you are alone, shout for help and start care without waiting.",
+    "Lay the infant face-down along your forearm, supporting the head and neck. The head should be lower than the chest. Rest your forearm on your thigh.",
+    "Give up to 5 firm back blows between the shoulder blades with the heel of your hand. Check the mouth after each blow — only remove a visible object you can hook out easily.",
+    "If back blows fail, turn the infant face-up along your other forearm, again head lower than chest.",
+    "Give up to 5 chest thrusts: place two fingers in the centre of the chest just below the nipple line, and push sharply down about one-third of the chest depth. Check after each thrust.",
+    "Keep alternating 5 back blows and 5 chest thrusts until the blockage clears, the infant can breathe, or becomes unresponsive.",
+    "If the infant becomes unresponsive, lower them to a firm surface and start infant CPR if you are trained — chest compressions can also dislodge the object."
+  ],
+  "avoid": [
+    "Never give abdominal (belly) thrusts to an infant — their organs can be damaged.",
+    "Do not shake the infant.",
+    "Do not blindly sweep the inside of the mouth with your fingers.",
+    "Do not delay action waiting for help — start care while help is on the way."
+  ],
+  "whenToEscalate": [
+    "Always emergency — every choking infant needs ambulance and hospital review, even if the blockage clears.",
+    "Continue to see a paediatrician for any infant who has had a choking episode, even if they now seem well — to check for inhaled fragments or airway irritation."
+  ],
+  "specialty": "Emergency department / paediatric emergency immediately.",
+  "sources": [
+    { "title": "Red Cross — infant choking" },
+    { "title": "Resuscitation Council UK — paediatric choking" },
+    { "title": "WHO Pocket book of hospital care for children — choking" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

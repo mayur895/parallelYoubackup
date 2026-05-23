@@ -1,0 +1,34 @@
+{
+  "id": "scorpion-sting",
+  "title": "Scorpion sting",
+  "bodySystem": "bites",
+  "summary": "Most scorpion stings cause local pain and swelling that settle within hours. A small number of species — and young children — can have serious systemic reactions.",
+  "steps": [
+    "Move the person away from where the sting happened and check no scorpion is on their clothing.",
+    "Keep the person calm and still. Lay them down with the stung limb still and supported.",
+    "Wash the sting site with soap and clean water.",
+    "Apply a cool compress wrapped in a cloth for 10–15 minutes at a time to ease pain and swelling.",
+    "An adult dose of paracetamol can ease pain. Avoid aspirin if the person is under 18.",
+    "Watch carefully for the next several hours: difficulty breathing, drooling, muscle twitching, sweating, vomiting, fast heartbeat, or restlessness — any of these means immediate hospital care."
+  ],
+  "avoid": [
+    "Do not cut the sting site or try to suck out the venom.",
+    "Do not apply ice directly to the skin.",
+    "Do not apply tourniquets.",
+    "Do not give alcohol, sedatives, or strong pain medicines that mask new symptoms."
+  ],
+  "whenToEscalate": [
+    "Any sting in a child, elderly person, or someone with heart, lung, or pregnancy concerns — see a doctor the same day.",
+    "Emergency immediately for: difficulty breathing or swallowing, drooling, muscle twitching, blurred vision, fast or irregular heartbeat, severe sweating, vomiting, collapse, or loss of consciousness.",
+    "Severe local pain not eased by paracetamol and a cool compress, or rapid spreading swelling.",
+    "Any sting where the scorpion is known to be a medically important species in your region."
+  ],
+  "specialty": "Emergency department for any systemic symptoms; general physician for review.",
+  "sources": [
+    { "title": "WHO — scorpion envenoming guidance" },
+    { "title": "Indian Council of Medical Research — scorpion sting management" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

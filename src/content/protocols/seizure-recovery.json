@@ -1,0 +1,36 @@
+{
+  "id": "seizure-recovery",
+  "title": "After a seizure (person now recovering)",
+  "bodySystem": "other",
+  "summary": "The convulsion has stopped. The person is breathing but groggy, confused, and tired. Your job now is to keep their airway clear, keep them safe, and decide whether they need urgent care.",
+  "steps": [
+    "Stay with them. Speak calmly and reassure them — they will be confused.",
+    "Lay them on their side in the recovery position so any saliva or vomit drains out.",
+    "Check that nothing is blocking their mouth. Loosen tight clothing around the neck.",
+    "Note the time the seizure ended, how long it lasted, and what it looked like — this matters for the doctor.",
+    "Check them for any injury from the fall — head bumps, bitten tongue, dislocated shoulder.",
+    "Let them rest. They may sleep deeply for an hour or more. Do not give food or drink until fully alert.",
+    "When they wake fully, explain what happened. Help them home and arrange a doctor's review."
+  ],
+  "avoid": [
+    "Do not put anything in their mouth during or after a seizure — they will not swallow their tongue.",
+    "Do not try to restrain or hold them down during a convulsion.",
+    "Do not give food, drink, or medication until they are fully alert and able to swallow.",
+    "Do not let them drive home, even if they say they feel fine."
+  ],
+  "whenToEscalate": [
+    "Emergency immediately if: the seizure lasted more than 5 minutes, a second seizure follows soon after, they do not regain consciousness, they were injured during the fall, they have trouble breathing, or this is their first ever seizure.",
+    "Pregnant people, anyone diabetic, anyone after a head injury, or with a high fever — emergency.",
+    "Anyone who had a seizure in water (bath, pool, river) — emergency, possible aspiration.",
+    "Even an 'expected' seizure in a known epileptic — see a doctor if anything was different from their usual pattern."
+  ],
+  "specialty": "Emergency department for any of the above; neurology / epilepsy clinic for follow-up.",
+  "sources": [
+    { "title": "WHO — epilepsy: a public health imperative" },
+    { "title": "NHS — what to do if someone has a seizure" },
+    { "title": "International League Against Epilepsy — first aid" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

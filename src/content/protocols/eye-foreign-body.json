@@ -1,0 +1,35 @@
+{
+  "id": "eye-foreign-body",
+  "title": "Small foreign body in the eye (dust, eyelash, grit)",
+  "bodySystem": "pain",
+  "summary": "A loose speck of dust or eyelash on the surface of the eye is usually easy to flush out. Anything embedded, sharp, or stuck under the eyelid needs medical care.",
+  "steps": [
+    "Wash your hands.",
+    "Tell the person not to rub the eye — that can scratch the cornea.",
+    "Sit them facing a strong light. Look carefully: ask them to look up, down, left, right.",
+    "If you can see a loose speck on the white of the eye or in the corner, try to flush it out with clean cool water poured gently from the inner corner outward.",
+    "If a speck is on the inside of the lower lid, pull the lid gently down and dab it out with the damp corner of a clean tissue.",
+    "If you cannot see the object easily or it does not flush out, cover the eye loosely with a clean dressing and arrange medical care."
+  ],
+  "avoid": [
+    "Do not rub the eye, even if it itches.",
+    "Do not try to remove anything stuck on the coloured part of the eye, embedded in the white, or under the upper lid — go to a doctor.",
+    "Do not use cotton wool, tissues with loose fibres, or tweezers near the eye.",
+    "Do not apply eye drops, ointments, or home remedies without a doctor's advice."
+  ],
+  "whenToEscalate": [
+    "Object stuck or embedded in the eye — emergency, do not try to remove it.",
+    "Pain, redness, watering, or blurred vision continues after the object has gone.",
+    "A high-speed injury — for example metal grinding, hammering, or an explosion — even if the eye looks normal.",
+    "Bleeding from the eye, change in pupil size or shape, or sensitivity to light.",
+    "Anyone who works with chemicals or metal who has eye pain — needs prompt review."
+  ],
+  "specialty": "Eye casualty / ophthalmology; emergency department for embedded or high-speed injuries.",
+  "sources": [
+    { "title": "NHS — eye injuries first aid" },
+    { "title": "St John Ambulance — foreign object in the eye" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

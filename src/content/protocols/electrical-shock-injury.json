@@ -1,0 +1,35 @@
+{
+  "id": "electrical-shock-injury",
+  "title": "Electric shock (low voltage household current)",
+  "bodySystem": "burns",
+  "summary": "Electric shocks can cause burns where the current enters and leaves the body, and can disturb heart rhythm. Hidden internal damage is possible even when the skin looks fine.",
+  "steps": [
+    "Do not touch the person while they are still in contact with the electricity. Switch off the power at the mains first if you can.",
+    "If you cannot switch off the power, stand on a dry, non-conducting surface (rubber mat, dry wood) and push them away from the source using a dry wooden stick or broom handle — never anything metal or wet.",
+    "Once safely disconnected, check if they are breathing and responsive.",
+    "Cool any visible burn under cool running water for at least 20 minutes (treat as a thermal burn).",
+    "Cover burns loosely with cling film or a clean non-fluffy cloth.",
+    "Keep the person warm and reassured while waiting for medical help.",
+    "Have them assessed even if they feel fine — heart rhythm and deep tissue damage may not show right away."
+  ],
+  "avoid": [
+    "Do not touch a person still in contact with an electrical source — you will be shocked too.",
+    "Do not use water or metal objects to push them away from a live source.",
+    "Do not assume a small burn means a small injury — internal damage can be hidden.",
+    "Do not let them eat or drink in case treatment is needed."
+  ],
+  "whenToEscalate": [
+    "Always — every electric shock that causes any burn, loss of consciousness, palpitations, muscle pain, or even a brief tingle that knocked them off their feet needs medical review.",
+    "Emergency immediately if they are unconscious, having chest pain or palpitations, breathing oddly, or have widespread burns.",
+    "High-voltage shocks (power lines, industrial sources) — always an emergency, large hidden injuries are typical."
+  ],
+  "specialty": "Emergency department for assessment; burns unit if large burns.",
+  "sources": [
+    { "title": "Red Cross — electrical injuries" },
+    { "title": "NHS — electric shock first aid" },
+    { "title": "St John Ambulance — electric shock" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

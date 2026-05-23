@@ -1,0 +1,37 @@
+{
+  "id": "frostbite-early",
+  "title": "Early frostbite (frostnip / superficial frostbite)",
+  "bodySystem": "other",
+  "summary": "Fingers, toes, ears, nose, or cheeks that have gone white, waxy, or numb after cold exposure. Early frostbite can usually be rewarmed safely if there is no risk of refreezing.",
+  "steps": [
+    "Get the person into a warm, sheltered place.",
+    "Treat any hypothermia first — see [[hypothermia-mild]]. A cold core makes frostbite rewarming dangerous.",
+    "Remove anything tight or wet near the frostbitten part — rings, watches, wet gloves, tight boots.",
+    "Rewarm the affected part in clean water that feels comfortably warm to a normal hand — not hot. Test the water yourself first; the frozen part cannot feel temperature.",
+    "Soak for 20–30 minutes until the skin turns pink or red and feels warm. It may sting or burn as it thaws — that is normal.",
+    "After rewarming, dry gently and wrap loosely in clean dry dressings. Place dry gauze or cloth between fingers and toes.",
+    "Keep the rewarmed part elevated, supported, and warm. Do not walk on a thawed foot."
+  ],
+  "avoid": [
+    "Do not rub the frostbitten area with snow, hands, or cloth — ice crystals damage tissue further.",
+    "Do not rewarm with direct heat: fires, stoves, hot water bottles, hair dryers, heating pads. Burns are easy because feeling is lost.",
+    "Do not start rewarming if there is any chance the part might refreeze before reaching medical care. Refreezing causes much worse damage than staying frozen.",
+    "Do not burst blisters that form during thawing.",
+    "Do not give alcohol or cigarettes — both worsen circulation."
+  ],
+  "whenToEscalate": [
+    "Always — every frostbite needs medical assessment, even if it looks like it has fully recovered.",
+    "Emergency if: skin stays black, blue, or hard after rewarming, large blisters develop, or the part remains numb after warming.",
+    "Combined hypothermia and frostbite — emergency. Treat the body core first.",
+    "Diabetic, vascular disease, or elderly people — extra urgent."
+  ],
+  "specialty": "Emergency department; specialist burns or wound unit for deep frostbite.",
+  "sources": [
+    { "title": "Wilderness Medical Society — frostbite guidelines" },
+    { "title": "NHS — frostbite" },
+    { "title": "Indian Army Medical Corps — high-altitude cold injury management" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

@@ -1,0 +1,35 @@
+{
+  "id": "concussion-suspected",
+  "title": "Possible concussion (mild head injury, person now alert)",
+  "bodySystem": "pain",
+  "summary": "A knock to the head with brief dazedness, headache, mild nausea, or confusion that has now improved. Most settle within a week but need careful watching, especially in the first 24 hours.",
+  "steps": [
+    "Have the person sit or lie down somewhere quiet. Cool the bump with a cold compress wrapped in a cloth for 15–20 minutes.",
+    "Keep them company for the next 24 hours. Do not leave them alone or let them drive home.",
+    "Wake them every 2–3 hours overnight to check they can answer simple questions normally.",
+    "Rest from work, school, sport, screen time, and reading for at least 24 hours, then return gradually as symptoms allow.",
+    "Drink water and eat lightly. Paracetamol at the labelled adult dose can ease headache (avoid ibuprofen or aspirin in the first 24 hours after a head injury, as both can affect bleeding).",
+    "No alcohol, no recreational drugs, and no driving until cleared by a doctor.",
+    "Do not return to contact sport until symptom-free for several days and reviewed by a doctor."
+  ],
+  "avoid": [
+    "Do not assume a 'mild' injury is safe — symptoms can worsen over hours.",
+    "Do not give aspirin or ibuprofen in the first 24 hours.",
+    "Do not let the person drive, drink alcohol, or play contact sport while symptoms remain.",
+    "Do not give strong pain medicines that mask new symptoms."
+  ],
+  "whenToEscalate": [
+    "Emergency immediately if any of these appear: loss of consciousness (even briefly), repeated vomiting, severe or worsening headache, clear fluid or blood from the nose or ear, seizures, weakness or numbness in any limb, slurred speech, unequal pupils, drowsiness that is hard to rouse, or unusual behaviour.",
+    "Children, elderly people, anyone on blood-thinners, and pregnant people — see a doctor today even after an apparently mild head knock.",
+    "If symptoms last more than a few days, get more medical advice."
+  ],
+  "specialty": "General physician or emergency department for any escalation sign.",
+  "sources": [
+    { "title": "NHS — head injury" },
+    { "title": "WHO — concussion in low-resource settings" },
+    { "title": "St John Ambulance — head injury" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

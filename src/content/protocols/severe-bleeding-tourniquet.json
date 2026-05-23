@@ -1,0 +1,36 @@
+{
+  "id": "severe-bleeding-tourniquet",
+  "title": "Life-threatening limb bleeding (tourniquet last resort)",
+  "bodySystem": "bleeding",
+  "summary": "Bleeding from an arm or leg that will not stop with hard pressure. A tourniquet is a last resort, used only when bleeding is life-threatening and direct pressure has failed.",
+  "steps": [
+    "Call for emergency help immediately. This is a life-threatening situation.",
+    "Lay the person down and raise the bleeding limb above heart level if possible.",
+    "Press very firmly on the wound with the cleanest cloth you have. Keep pressing without lifting it to check.",
+    "If bleeding continues to soak through, add more cloth on top — never remove the first layer. Keep pressing.",
+    "Only if direct pressure fails and bleeding remains life-threatening: apply a wide band (5 cm or wider) about 5–7 cm above the wound, between the wound and the heart. Never on a joint.",
+    "Tighten the band until bleeding stops. Note the exact time it was applied — tell the medics that time.",
+    "Keep the person warm and reassure them. Do not loosen the tourniquet once placed."
+  ],
+  "avoid": [
+    "Do not use a tourniquet for a small or moderate cut — direct pressure is safer and almost always enough.",
+    "Do not use a thin string, wire, or shoelace — they can cut tissue. Use a wide band only.",
+    "Do not place a tourniquet on the neck, torso, or directly over a joint.",
+    "Do not loosen, lift, or remove the tourniquet once it is on — only medical staff should do that.",
+    "Do not give the person food or drink in case surgery is needed."
+  ],
+  "whenToEscalate": [
+    "Always — this is an emergency requiring hospital care immediately.",
+    "If signs of shock appear: pale, cold, clammy skin, fast weak pulse, drowsiness, or fainting.",
+    "If bleeding continues despite a tourniquet — keep direct pressure on the wound and get the person to an emergency department as fast as possible."
+  ],
+  "specialty": "Emergency department or trauma centre — immediate transport.",
+  "sources": [
+    { "title": "Red Cross — severe bleeding and tourniquet use" },
+    { "title": "IFRC International First Aid Guidelines 2020 — severe bleeding" },
+    { "title": "WHO Basic Emergency Care — external haemorrhage" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

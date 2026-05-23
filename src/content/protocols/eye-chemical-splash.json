@@ -1,0 +1,34 @@
+{
+  "id": "eye-chemical-splash",
+  "title": "Chemical splash in the eye",
+  "bodySystem": "burns",
+  "summary": "Any chemical in the eye is an emergency. Continuous flushing with clean water in the first minutes makes the biggest difference to saving the eye.",
+  "steps": [
+    "Start rinsing the eye with clean cool water immediately. Every second counts.",
+    "Hold the eyelids open. Tilt the head so water runs from the inner corner outward and away from the other eye.",
+    "Rinse continuously for at least 20 minutes — use a slow-running tap, jug, or clean container refilled as needed.",
+    "If contact lenses are in, try to remove them while rinsing — but do not delay rinsing to do so.",
+    "Keep the person calm. Cover both eyes loosely with a clean cloth after rinsing — moving one eye moves the other.",
+    "Arrange immediate transport to an emergency department. Take the chemical container or label with you if safe to do so."
+  ],
+  "avoid": [
+    "Do not rub the eye.",
+    "Do not try to neutralise the chemical with another substance.",
+    "Do not apply eye drops, oils, or home remedies.",
+    "Do not stop rinsing early — keep going right up to medical help arriving."
+  ],
+  "whenToEscalate": [
+    "Always — every chemical splash in the eye is an emergency, even if the eye feels better after rinsing.",
+    "Immediately for strong alkalis (drain cleaner, oven cleaner, cement dust, lime) — these damage faster than acids.",
+    "If vision is blurred or lost, the eye is bleeding, or the eyelid is severely swollen."
+  ],
+  "specialty": "Emergency department or eye casualty unit immediately.",
+  "sources": [
+    { "title": "WHO — eye injuries first aid" },
+    { "title": "NHS — chemical splash in the eye" },
+    { "title": "Royal College of Ophthalmologists — chemical eye injury" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

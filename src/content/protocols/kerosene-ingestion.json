@@ -1,0 +1,36 @@
+{
+  "id": "kerosene-ingestion",
+  "title": "Swallowed kerosene, petrol, or paraffin (hydrocarbon)",
+  "bodySystem": "poisoning",
+  "summary": "Kerosene, petrol, lamp oil, and paint thinners are 'hydrocarbons'. The main danger is not the stomach — it is the lung damage if any is breathed in. Vomiting must NOT be induced.",
+  "steps": [
+    "Move the person to fresh air, away from any fumes.",
+    "Wipe any liquid from the mouth, face, and clothes. Remove and isolate any contaminated clothing.",
+    "Keep the person sitting upright or lying on their side. Do not lay them flat on their back.",
+    "Rinse the mouth with clean water and spit it out — do not swallow.",
+    "Note how much was swallowed, when, and which product (bring the container if safe).",
+    "Call emergency or a poison control line immediately and follow their instructions.",
+    "If they become unresponsive, place in the recovery position and monitor breathing while help arrives."
+  ],
+  "avoid": [
+    "Do NOT make the person vomit. Hydrocarbons aspirated into the lungs cause severe chemical pneumonia.",
+    "Do not give milk, oil, or 'home antidotes'.",
+    "Do not give activated charcoal unless instructed by medical staff.",
+    "Do not give food or drink while waiting for help, except a small mouth rinse spat out."
+  ],
+  "whenToEscalate": [
+    "Always emergency — every kerosene or hydrocarbon ingestion needs a hospital review.",
+    "Especially urgent if: coughing, choking, gagging, wheezing, breathlessness, hoarse voice, drowsiness, confusion, or seizures.",
+    "Any infant or small child who has swallowed any amount — emergency immediately.",
+    "Skin or eye contact along with ingestion — irrigate copiously and get to hospital."
+  ],
+  "specialty": "Emergency department; involve a poison control centre if available.",
+  "sources": [
+    { "title": "WHO — guidelines for poisoning" },
+    { "title": "NHS — poisoning" },
+    { "title": "AIIMS National Poisons Information Centre — hydrocarbon ingestion" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

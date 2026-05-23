@@ -1,0 +1,32 @@
+{
+  "id": "tooth-knocked-out",
+  "title": "Adult tooth knocked out (dental avulsion)",
+  "bodySystem": "bleeding",
+  "summary": "An adult permanent tooth knocked completely out can sometimes be re-implanted if you act within an hour. Baby teeth are NOT re-implanted.",
+  "steps": [
+    "Find the tooth. Pick it up by the crown (the white part) — never touch the root.",
+    "If the tooth is dirty, rinse it gently with cool clean water or milk for no more than 10 seconds. Do not scrub it.",
+    "If you can, place the tooth back in its socket the right way around and have the person bite gently on a clean cloth to hold it in place.",
+    "If you cannot re-implant it, store the tooth in milk, or in saliva (in the cheek for an adult who is alert and not at risk of choking). Plain water is a last resort.",
+    "Control any bleeding from the empty socket by biting on a clean folded cloth for 10–15 minutes.",
+    "Get the person to a dentist or emergency dental service as fast as possible, ideally within 30–60 minutes."
+  ],
+  "avoid": [
+    "Do not touch or scrub the root of the tooth.",
+    "Do not store the tooth in plain water for long — it damages the root cells.",
+    "Do not try to re-implant a baby tooth — it can damage the developing adult tooth underneath.",
+    "Do not delay seeing a dentist — survival of the tooth drops fast after an hour."
+  ],
+  "whenToEscalate": [
+    "Always — a dentist or emergency dental service should see the person within the hour for the best chance of saving the tooth.",
+    "An emergency department visit is needed if there is a serious facial injury, suspected jaw fracture, or heavy bleeding that will not stop with pressure."
+  ],
+  "specialty": "Emergency dentist; emergency department for associated facial trauma.",
+  "sources": [
+    { "title": "International Association of Dental Traumatology — avulsion guidelines" },
+    { "title": "NHS — knocked-out tooth first aid" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

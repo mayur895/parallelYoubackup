@@ -1,0 +1,35 @@
+{
+  "id": "alcohol-poisoning",
+  "title": "Suspected alcohol poisoning",
+  "bodySystem": "poisoning",
+  "summary": "A person who has drunk too much alcohol can stop breathing, choke on vomit, or become dangerously cold. They need watching closely, not 'sleeping it off' alone.",
+  "steps": [
+    "Stay with the person. Do not leave them alone.",
+    "Check whether they respond. If they are unresponsive, breathing badly, or breathing very slowly, call for emergency help immediately.",
+    "Place them on their side in the recovery position so vomit does not block the airway.",
+    "Keep them warm with a blanket or jacket — alcohol drops body temperature.",
+    "Loosen tight clothing around the neck and chest.",
+    "Check breathing every few minutes. Be ready to wipe vomit from the mouth.",
+    "Note how much they drank and any other substances — give this information to medics."
+  ],
+  "avoid": [
+    "Do not leave them lying on their back — they may choke if they vomit.",
+    "Do not give them coffee, food, or more water to 'sober them up' — this does not work and can cause choking.",
+    "Do not put them in a cold shower or rub them with snow.",
+    "Do not assume sleep is safe — heavy drinkers can stop breathing in their sleep."
+  ],
+  "whenToEscalate": [
+    "Emergency immediately if: they are unresponsive or cannot be roused, breathing is slow or irregular, lips or fingers look blue or pale, they are vomiting while unresponsive, they have had a seizure, or their skin is cold and clammy.",
+    "Any combination of alcohol with other drugs or medicines — emergency.",
+    "Young people, small adults, and anyone unfamiliar with alcohol — go to medical care earlier."
+  ],
+  "specialty": "Emergency department.",
+  "sources": [
+    { "title": "NHS — alcohol poisoning" },
+    { "title": "WHO — harmful use of alcohol management guidelines" },
+    { "title": "St John Ambulance — alcohol poisoning" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

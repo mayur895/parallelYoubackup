@@ -1,0 +1,35 @@
+{
+  "id": "diabetic-hypoglycemia",
+  "title": "Low blood sugar in someone with diabetes (hypoglycaemia)",
+  "bodySystem": "other",
+  "summary": "Someone with diabetes who is sweating, shaky, pale, confused, or aggressive may have low blood sugar. Sugar by mouth — if they can swallow — works fast.",
+  "steps": [
+    "Help them sit or lie down somewhere safe.",
+    "If they are alert and can swallow, give a fast-acting sugar: 4–5 glucose tablets, half a cup of fruit juice or regular fizzy drink, 3 teaspoons of sugar in water, or a tablespoon of honey/jam.",
+    "Wait 10–15 minutes. If they have not improved, give the same dose of fast sugar again.",
+    "Once they feel better, give a slower carbohydrate snack to keep sugar steady: a piece of bread, a biscuit, a banana, or a meal if it is due.",
+    "Help them check their blood sugar if they have a meter, and note what happened (last insulin dose, last meal, recent activity).",
+    "Stay with them for at least an hour. Even after they recover, they should not drive for several hours."
+  ],
+  "avoid": [
+    "Do not give insulin — that is the doctor's job. The aim of first aid is to raise blood sugar, not lower it further.",
+    "Do not give anything by mouth if they are too drowsy to swallow safely, unresponsive, or having a seizure — call emergency instead.",
+    "Do not assume they are drunk or angry on purpose — low sugar mimics both.",
+    "Do not skip the slow carbohydrate snack — sugar alone wears off quickly."
+  ],
+  "whenToEscalate": [
+    "Emergency immediately if: they are unconscious or cannot swallow, having a seizure, drowsy and unable to drink, or do not improve after two fast-sugar doses 15 minutes apart.",
+    "Anyone who has had a hypo while alone, while driving, or near machinery — see their diabetes team for review.",
+    "Repeated hypos over days or weeks — needs urgent diabetes review.",
+    "First-ever hypo in someone newly diagnosed — see the diabetes team that day."
+  ],
+  "specialty": "Emergency department for severe hypos; diabetes team / general physician for follow-up.",
+  "sources": [
+    { "title": "International Diabetes Federation — hypoglycaemia management" },
+    { "title": "NHS — low blood sugar (hypoglycaemia)" },
+    { "title": "WHO — diabetes management" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

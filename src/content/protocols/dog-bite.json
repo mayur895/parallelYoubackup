@@ -1,0 +1,37 @@
+{
+  "id": "dog-bite",
+  "title": "Dog bite or other animal bite",
+  "bodySystem": "bites",
+  "summary": "Animal bites carry infection risk and, depending on the animal and region, the risk of rabies. Wound care plus medical review is the rule, not the exception.",
+  "steps": [
+    "Move away from the animal to a safe place.",
+    "Wash the wound thoroughly with running water and soap for at least 15 minutes. This single step removes most rabies virus.",
+    "After washing, apply an antiseptic if available (povidone iodine or alcohol-based).",
+    "Press a clean cloth on the wound if it is still bleeding.",
+    "Cover the wound loosely with a clean dressing.",
+    "Note the type of animal, whether it was a pet or stray, whether the bite was provoked, and whether the animal is vaccinated and available for observation.",
+    "Get to a clinic or hospital the same day for a tetanus check and a rabies risk assessment."
+  ],
+  "avoid": [
+    "Do not skip washing the wound — it is the most important first step against rabies.",
+    "Do not stitch the wound closed yourself.",
+    "Do not apply turmeric, ash, chillies, or other home pastes inside the wound.",
+    "Do not delay rabies post-exposure care while you 'wait and see' — the vaccine works only if started early.",
+    "Do not put yourself or others at risk to capture or kill the animal."
+  ],
+  "whenToEscalate": [
+    "Always — see a doctor the same day for tetanus and rabies risk assessment.",
+    "Emergency immediately for: deep or wide wounds, bites to the face, hands, or genitals, heavy bleeding, signs of nerve or tendon damage, or any bite from a wild, sick, or behaving-strangely animal.",
+    "Bites in children, elderly people, or pregnant people — extra urgent.",
+    "Any developing redness, warmth, pus, fever, or red streaks spreading from the wound in the days afterward."
+  ],
+  "specialty": "Emergency department or rabies post-exposure clinic; general physician for tetanus update.",
+  "sources": [
+    { "title": "WHO — rabies post-exposure prophylaxis" },
+    { "title": "WHO — animal bites factsheet" },
+    { "title": "NHS — dog and animal bites" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

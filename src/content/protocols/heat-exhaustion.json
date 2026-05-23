@@ -1,0 +1,36 @@
+{
+  "id": "heat-exhaustion",
+  "title": "Heat exhaustion",
+  "bodySystem": "other",
+  "summary": "Tiredness, dizziness, headache, heavy sweating, and feeling sick after hot weather or hard activity in the sun. Catching it early stops it from becoming heatstroke, which is life-threatening.",
+  "steps": [
+    "Move the person to a cool, shaded, well-ventilated place.",
+    "Lay them down and raise their legs slightly.",
+    "Loosen or remove unnecessary clothing.",
+    "Cool the skin: sponge with cool water, fan them, apply cool wet cloths to the neck, armpits, and groin.",
+    "If they are alert and able to swallow, give sips of cool water — every 5 minutes — or an oral rehydration solution. A pinch of salt and a teaspoon of sugar in a cup of water works if nothing else is available.",
+    "Keep cooling them and monitoring for 30 minutes. They should start to feel better as they cool and rehydrate.",
+    "Rest for the rest of the day. Avoid heat and exertion until next day."
+  ],
+  "avoid": [
+    "Do not give salt tablets or large salty drinks at once.",
+    "Do not give alcohol, caffeine, or very cold drinks (which may cause stomach cramps).",
+    "Do not return them to the heat or activity as soon as they feel better.",
+    "Do not assume they are fine if they remain confused or stop sweating — these are heatstroke warning signs."
+  ],
+  "whenToEscalate": [
+    "Emergency immediately — treat as heatstroke — if: skin is hot and dry (sweating has stopped), temperature is high, confusion, slurred speech, seizures, vomiting, or loss of consciousness.",
+    "If symptoms do not improve within 30 minutes of cooling and rehydration.",
+    "Infants, elderly, pregnant people, and those with heart or kidney disease — see a doctor early.",
+    "Heat exhaustion in someone working in heavy clothing or PPE — extra urgent."
+  ],
+  "specialty": "Emergency department for any heatstroke sign; general physician for review.",
+  "sources": [
+    { "title": "WHO — heat-health action plans" },
+    { "title": "NHS — heat exhaustion and heatstroke" },
+    { "title": "St John Ambulance — heat exhaustion" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

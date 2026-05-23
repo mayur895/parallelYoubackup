@@ -1,0 +1,36 @@
+{
+  "id": "chemical-burn-skin",
+  "title": "Chemical burn on the skin (acid, alkali, household cleaner)",
+  "bodySystem": "burns",
+  "summary": "Acids, alkalis, bleach, lime, cement, and strong cleaning products keep damaging skin until they are washed away completely. Fast, long rinsing is the priority.",
+  "steps": [
+    "Protect yourself — wear gloves or use a cloth so the chemical does not transfer to you.",
+    "Carefully remove any contaminated clothing or jewellery without dragging it over the face.",
+    "If the chemical is a dry powder (like lime or cement), brush it off the skin before rinsing.",
+    "Rinse the affected area with cool running water for at least 20 minutes — longer for strong acids or alkalis.",
+    "Keep the water running off the body so the chemical is not pushed onto unaffected skin.",
+    "Cover the area loosely with cling film (plastic wrap) or a clean, non-fluffy cloth after rinsing.",
+    "Note the name of the chemical and how long the person was exposed — tell the medics."
+  ],
+  "avoid": [
+    "Do not try to neutralise the chemical with another substance (no vinegar on alkali, no baking soda on acid) — this can make the burn worse.",
+    "Do not apply oils, ointments, butter, or pastes.",
+    "Do not burst blisters or rub the skin.",
+    "Do not stop rinsing early because the pain has eased."
+  ],
+  "whenToEscalate": [
+    "Always — chemical burns need medical assessment. Get to an emergency department after starting rinsing.",
+    "Immediately if the chemical reached the eyes, mouth, throat, or was inhaled.",
+    "Immediately if the burn is on the face, hands, feet, genitals, joints, or covers a large area.",
+    "If the person feels dizzy, short of breath, or unwell — this may indicate systemic exposure."
+  ],
+  "specialty": "Emergency department or burns unit.",
+  "sources": [
+    { "title": "WHO — burn first aid" },
+    { "title": "NHS — chemical burns" },
+    { "title": "British Burn Association — first aid for burns" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

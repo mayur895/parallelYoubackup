@@ -1,0 +1,36 @@
+{
+  "id": "snake-bite",
+  "title": "Snake bite",
+  "bodySystem": "bites",
+  "summary": "Treat every snake bite as potentially serious. The aim is to slow venom spread, keep the person calm, and get to a hospital with antivenom as fast as possible.",
+  "steps": [
+    "Move the person well away from the snake. Do not try to catch or kill it — a photo from a safe distance is enough.",
+    "Reassure the person and keep them as still as possible. Fear and movement speed up venom spread.",
+    "Lay them down on their side. Keep the bitten limb level with the heart and immobilised — splint as you would a fracture.",
+    "Remove rings, watches, bangles, and tight clothing near the bite before swelling starts.",
+    "Wash the bite gently with soap and clean water if available. Cover loosely with a clean dry cloth.",
+    "Note the time of the bite and where on the body it was. Mark the spreading edge of any swelling with a pen so doctors can see how fast it is moving.",
+    "Arrange the fastest possible transport to a hospital that can provide antivenom. Carry the person if you can — walking pumps venom around the body."
+  ],
+  "avoid": [
+    "Do not cut, suck, or apply ice to the bite. Do not try to suck out the venom.",
+    "Do not apply a tight tourniquet — this can damage the limb and is no longer recommended for most bites.",
+    "Do not give the person alcohol, food, or aspirin/ibuprofen.",
+    "Do not waste time trying to identify the snake exactly — get the person to hospital.",
+    "Do not apply herbal pastes, cow dung, or other folk remedies to the wound."
+  ],
+  "whenToEscalate": [
+    "Always emergency — every snake bite needs hospital review, even if it looks like a dry bite.",
+    "Especially urgent if: rapid swelling, difficulty breathing, drooping eyelids or facial weakness, bleeding from gums or wounds, dark urine, vomiting, drowsiness, or collapse.",
+    "Bites in children, pregnant people, or anyone elderly — extra urgent."
+  ],
+  "specialty": "Emergency department with antivenom availability.",
+  "sources": [
+    { "title": "WHO — snakebite envenoming guidelines" },
+    { "title": "WHO Regional Office for South-East Asia — snake bite management" },
+    { "title": "Indian National Snakebite Protocol" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

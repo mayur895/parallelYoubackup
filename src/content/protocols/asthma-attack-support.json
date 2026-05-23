@@ -1,0 +1,36 @@
+{
+  "id": "asthma-attack-support",
+  "title": "Helping someone through an asthma attack",
+  "bodySystem": "breathing",
+  "summary": "An asthma attack causes wheezing, tight chest, and trouble breathing. Calm support and the person's own reliever inhaler are the first steps.",
+  "steps": [
+    "Help the person sit upright — leaning slightly forward, hands on knees or a table. Do not lay them down.",
+    "Loosen tight clothing around the neck and chest.",
+    "Reassure them and keep your voice calm. Stress makes the attack worse.",
+    "Help them use their own reliever inhaler (usually blue) — 1 puff at a time, breathing in slowly, holding for about 10 seconds. They may take a puff every 30–60 seconds, up to 10 puffs.",
+    "If a spacer device is available, use it — it delivers the medicine more effectively.",
+    "Open a window if the air indoors is smoky or dusty; move them to fresher air if outdoors triggers are mild.",
+    "Watch their breathing, lips, and level of alertness closely."
+  ],
+  "avoid": [
+    "Do not give someone else's inhaler unless it is the same reliever (blue) type and they have no alternative — and only as a last resort.",
+    "Do not lay them flat on their back — sitting upright eases breathing.",
+    "Do not give food, drink, or sedating medicines.",
+    "Do not assume the attack is over when they take their inhaler — keep watching."
+  ],
+  "whenToEscalate": [
+    "Call for emergency help immediately if: the reliever inhaler does not help within 10 minutes, they are too breathless to speak in full sentences, lips or fingernails look blue or grey, they become exhausted, drowsy, or confused.",
+    "If this is their first ever attack, call for emergency help.",
+    "Any child having an asthma attack that does not settle quickly with a reliever — call for emergency help.",
+    "Even if the attack settles, see a doctor the same day for review and an action plan."
+  ],
+  "specialty": "Emergency department for severe attacks; family doctor / pulmonologist for ongoing asthma management.",
+  "sources": [
+    { "title": "WHO — asthma management" },
+    { "title": "NHS — asthma attack first aid" },
+    { "title": "St John Ambulance — asthma" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

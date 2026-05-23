@@ -1,0 +1,36 @@
+{
+  "id": "hypothermia-mild",
+  "title": "Mild hypothermia (cold exposure, person still alert)",
+  "bodySystem": "other",
+  "summary": "Shivering, cold pale skin, slow thinking, clumsy hands after long cold exposure. Catching it early is straightforward — getting it wrong (rough handling, hot water, alcohol) is dangerous.",
+  "steps": [
+    "Move the person out of the wind and cold to a sheltered, warm place.",
+    "Replace any wet clothes with dry warm ones. If you have no dry clothes, wrap them — wet clothes and all — in a blanket or sleeping bag along with another warm person.",
+    "Insulate them from the ground with a mat, blanket, or jackets. Cold ground pulls heat out faster than cold air.",
+    "Cover the head, neck, and torso first. Most heat is lost from these areas.",
+    "If they can swallow safely and are fully alert, give warm sweet drinks — not alcohol, not coffee.",
+    "Encourage gentle movement once they have started to warm up — large muscle activity speeds rewarming.",
+    "Watch them closely for the next hour. Shivering should ease as they warm; if it gets worse or they get sleepy or confused, get medical help."
+  ],
+  "avoid": [
+    "Do not rub or massage the limbs vigorously — cold blood from the limbs returning to the heart can trigger dangerous heart rhythms.",
+    "Do not put the person in a hot bath or shower, or against a hot fire or stove.",
+    "Do not give alcohol, coffee, or sedatives.",
+    "Do not assume they are safe once they stop shivering — this can also be a sign of worsening hypothermia."
+  ],
+  "whenToEscalate": [
+    "Emergency immediately if: shivering stops while still cold, speech becomes slurred, they become drowsy, confused, or unconscious, or their pulse slows.",
+    "Anyone pulled from cold water, an avalanche, or trapped outdoors overnight — emergency.",
+    "Infants, elderly, and anyone with diabetes or thyroid disease — see a doctor even after apparent recovery.",
+    "Frostbite of fingers, toes, ears, nose, or face along with hypothermia — see [[frostbite-early]] and seek medical care."
+  ],
+  "specialty": "Emergency department; high-altitude clinic in Ladakh-type regions.",
+  "sources": [
+    { "title": "Wilderness Medical Society — hypothermia guidelines" },
+    { "title": "NHS — hypothermia" },
+    { "title": "WHO — hypothermia in low-resource settings" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

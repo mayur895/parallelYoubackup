@@ -1,0 +1,36 @@
+{
+  "id": "altitude-sickness-acute",
+  "title": "Acute mountain sickness (AMS) at altitude",
+  "bodySystem": "other",
+  "summary": "Headache, nausea, tiredness, and poor sleep within a day of going above about 2,500 metres. Common in Ladakh visitors. The single most important treatment is do not go higher.",
+  "steps": [
+    "Stop ascending. Stay at your current altitude — do not climb further until symptoms have fully gone for 24 hours.",
+    "Rest. Avoid hard physical activity. Sleep in a horizontal position.",
+    "Drink plenty of water — small amounts often. Aim for clear urine.",
+    "Eat light meals — carbohydrates are best tolerated.",
+    "Avoid alcohol, cigarettes, and sedating medicines including sleeping tablets.",
+    "Paracetamol or ibuprofen at labelled adult doses can ease headache.",
+    "If symptoms do not improve within 24 hours of rest, or get worse at any time, descend at least 500–1,000 metres."
+  ],
+  "avoid": [
+    "Do not ascend any further while symptomatic.",
+    "Do not drink alcohol or smoke at altitude — both worsen AMS.",
+    "Do not take sleeping tablets that suppress breathing.",
+    "Do not assume 'it will pass' if symptoms are worsening — descend.",
+    "Do not rely on portable oxygen or medicines instead of descent if symptoms are severe."
+  ],
+  "whenToEscalate": [
+    "Emergency immediately and descend at once for: severe headache that does not ease with rest and painkillers, repeated vomiting, breathlessness even when resting, persistent dry cough, frothy or pink sputum, drowsiness or confusion, clumsiness or unsteady walking ('drunk-like'), or loss of consciousness.",
+    "These can be signs of high-altitude cerebral oedema (HACE) or high-altitude pulmonary oedema (HAPE) — both are life-threatening.",
+    "Pregnant people, infants and young children, anyone with heart, lung, or sickle cell disease — see a doctor early at altitude."
+  ],
+  "specialty": "Local high-altitude clinic; emergency descent + hospital for HACE / HAPE.",
+  "sources": [
+    { "title": "Wilderness Medical Society — acute altitude illness guidelines" },
+    { "title": "Indian Army Medical Corps — high-altitude illness manual" },
+    { "title": "UIAA Medical Commission — altitude illness recommendations" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

@@ -1,0 +1,36 @@
+{
+  "id": "carbon-monoxide-exposure",
+  "title": "Carbon monoxide exposure (kerosene heater, faulty stove, smoke)",
+  "bodySystem": "poisoning",
+  "summary": "Carbon monoxide (CO) is a silent, odourless gas from burning kerosene, wood, charcoal, or gas in poorly ventilated rooms. It causes headache, dizziness, nausea, and confusion — and can kill quickly.",
+  "steps": [
+    "Get the person — and yourself — out into fresh air immediately. Do not stop to investigate the source.",
+    "Open windows and doors as you leave to ventilate the room, but only if it does not delay leaving.",
+    "Turn off the heater, stove, or generator if it is safe and quick to do so. Otherwise leave it.",
+    "Once outside, sit the person down. Loosen tight clothing.",
+    "Check breathing. If they are unconscious or breathing badly, call emergency and start CPR if you are trained.",
+    "Call emergency help even if the person seems to recover after going outside — CO causes delayed damage to the heart and brain.",
+    "Do not re-enter the room until it has been ventilated for a long time and the source identified."
+  ],
+  "avoid": [
+    "Do not light a flame to 'look around' in a room where CO is suspected.",
+    "Do not assume the person is fine just because they wake up in fresh air.",
+    "Do not use indoor heaters or stoves without a vent or chimney to the outside.",
+    "Do not run a petrol or diesel generator indoors or in a garage attached to living space."
+  ],
+  "whenToEscalate": [
+    "Always — every suspected CO exposure needs medical assessment, even if the person feels better outside.",
+    "Emergency immediately for: unconsciousness, seizure, confusion, chest pain, severe headache, vomiting, or trouble breathing.",
+    "Pregnant people, infants, elderly, and anyone with heart or lung disease — extra urgent.",
+    "If several people in the same building feel unwell together — assume CO and evacuate."
+  ],
+  "specialty": "Emergency department — they can measure CO in blood and provide oxygen treatment.",
+  "sources": [
+    { "title": "WHO — household air pollution and CO exposure" },
+    { "title": "NHS — carbon monoxide poisoning" },
+    { "title": "US CDC — carbon monoxide poisoning prevention" }
+  ],
+  "reviewedBy": null,
+  "reviewedOn": null,
+  "schemaVersion": 1
+}

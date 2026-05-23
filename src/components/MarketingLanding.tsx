@@ -206,7 +206,7 @@ function ProductPreview({ onStart }: { onStart: () => void }) {
         <PhoneScreen step={1} caption="Describe in plain words. Red flags are scanned live as you type.">
           <FakeDescribe />
         </PhoneScreen>
-        <PhoneScreen step={2} caption="A small local model routes your symptoms to one of 23 protocols.">
+        <PhoneScreen step={2} caption={`A small local model routes your symptoms to one of ${PROTOCOL_COUNT} protocols.`}>
           <FakeAnalyze />
         </PhoneScreen>
         <PhoneScreen step={3} caption="Clear steps, what to avoid, when to escalate, and who to call.">
@@ -417,7 +417,7 @@ function Features() {
     },
     {
       title: 'Hand-authored protocols', accent: T.amber,
-      body: '23 protocols traceable to WHO, Red Cross, NHS and St John Ambulance — not whatever the AI feels like saying.',
+      body: `${PROTOCOL_COUNT} protocols traceable to WHO, Red Cross, NHS and St John Ambulance — not whatever the AI feels like saying.`,
       icon: <Icon path="M5 4h12a2 2 0 0 1 2 2v14l-4-3-4 3-4-3-2 2V6a2 2 0 0 1 2-2zM8 9h6M8 13h6" />,
     },
     {
