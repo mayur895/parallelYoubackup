@@ -23,7 +23,7 @@
   "specialty": "General physician or mental health professional.",
   "sources": [
     { "title": "NHS — panic disorder", "url": "https://www.nhs.uk/mental-health/conditions/panic-disorder/", "accessedOn": "2026-05-23" },
-    { "title": "WHO — mental health first aid" }
+    { "title": "WHO — mental health first aid", "url": "https://www.who.int/publications-detail-redirect/9789241596206", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

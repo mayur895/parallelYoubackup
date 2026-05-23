@@ -27,8 +27,8 @@
   ],
   "specialty": "Emergency department or rabies post-exposure clinic; general physician for tetanus update.",
   "sources": [
-    { "title": "WHO — rabies post-exposure prophylaxis" },
-    { "title": "WHO — animal bites factsheet" },
+    { "title": "WHO — rabies post-exposure prophylaxis", "url": "https://www.who.int/news-room/fact-sheets/detail/rabies", "accessedOn": "2026-05-23" },
+    { "title": "WHO — animal bites factsheet", "url": "https://www.who.int/news-room/fact-sheets/detail/animal-bites", "accessedOn": "2026-05-23" },
     { "title": "NHS — dog and animal bites", "url": "https://www.nhs.uk/conditions/animal-and-human-bites/", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,

@@ -22,7 +22,7 @@
   ],
   "specialty": "General physician; emergency department for any escalation sign.",
   "sources": [
-    { "title": "WHO — bites and stings" }
+    { "title": "WHO — bites and stings", "url": "https://www.who.int/news-room/fact-sheets/detail/animal-bites", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

@@ -27,7 +27,7 @@
   "specialty": "Emergency department immediately.",
   "sources": [
     { "title": "Red Cross — recognising shock" },
-    { "title": "WHO Basic Emergency Care — shock" },
+    { "title": "WHO Basic Emergency Care — shock", "url": "https://www.who.int/publications-detail-redirect/basic-emergency-care-approach-to-the-acutely-ill-and-injured", "accessedOn": "2026-05-23" },
     { "title": "St John Ambulance — shock" }
   ],
   "reviewedBy": null,

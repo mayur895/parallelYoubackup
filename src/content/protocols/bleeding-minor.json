@@ -24,7 +24,7 @@
   ],
   "specialty": "General physician or nearest urgent care clinic.",
   "sources": [
-    { "title": "WHO basic first aid" },
+    { "title": "WHO basic first aid", "url": "https://www.who.int/publications-detail-redirect/basic-emergency-care-approach-to-the-acutely-ill-and-injured", "accessedOn": "2026-05-23" },
     { "title": "Red Cross — wound care" }
   ],
   "reviewedBy": null,

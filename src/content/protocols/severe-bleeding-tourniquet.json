@@ -28,7 +28,7 @@
   "sources": [
     { "title": "Red Cross — severe bleeding and tourniquet use" },
     { "title": "IFRC International First Aid Guidelines 2020 — severe bleeding" },
-    { "title": "WHO Basic Emergency Care — external haemorrhage" }
+    { "title": "WHO Basic Emergency Care — external haemorrhage", "url": "https://www.who.int/publications-detail-redirect/basic-emergency-care-approach-to-the-acutely-ill-and-injured", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

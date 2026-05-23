@@ -26,7 +26,7 @@
   "specialty": "Paediatrician or emergency department for any escalation sign.",
   "sources": [
     { "title": "NHS — fever in children", "url": "https://www.nhs.uk/symptoms/fever-in-children/", "accessedOn": "2026-05-23" },
-    { "title": "WHO — paediatric fever" }
+    { "title": "WHO — paediatric fever", "url": "https://www.who.int/publications/i/item/978-92-4-154837-3", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

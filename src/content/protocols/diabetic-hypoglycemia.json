@@ -27,7 +27,7 @@
   "sources": [
     { "title": "International Diabetes Federation — hypoglycaemia management" },
     { "title": "NHS — low blood sugar (hypoglycaemia)", "url": "https://www.nhs.uk/conditions/low-blood-sugar-hypoglycaemia/", "accessedOn": "2026-05-23" },
-    { "title": "WHO — diabetes management" }
+    { "title": "WHO — diabetes management", "url": "https://www.who.int/news-room/fact-sheets/detail/diabetes", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,

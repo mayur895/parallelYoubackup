@@ -26,7 +26,7 @@
   ],
   "specialty": "Emergency department for any heatstroke sign; general physician for review.",
   "sources": [
-    { "title": "WHO — heat-health action plans" },
+    { "title": "WHO — heat-health action plans", "url": "https://www.who.int/publications/i/item/9789289071918", "accessedOn": "2026-05-23" },
     { "title": "NHS — heat exhaustion and heatstroke", "url": "https://www.nhs.uk/conditions/heat-exhaustion-heatstroke/", "accessedOn": "2026-05-23" },
     { "title": "St John Ambulance — heat exhaustion" }
   ],

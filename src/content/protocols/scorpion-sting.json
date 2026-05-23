@@ -25,7 +25,7 @@
   ],
   "specialty": "Emergency department for any systemic symptoms; general physician for review.",
   "sources": [
-    { "title": "WHO — scorpion envenoming guidance" },
+    { "title": "WHO — scorpion envenoming guidance", "url": "https://platform.who.int/docs/default-source/mca-documents/policy-documents/operational-guidance/EGY-CH-41-01-OPERATIONALGUIDANCE-eng-Flowchart-Scorpion-Sting-Management.pdf", "accessedOn": "2026-05-23" },
     { "title": "Indian Council of Medical Research — scorpion sting management" }
   ],
   "reviewedBy": null,

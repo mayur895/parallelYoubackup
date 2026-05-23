@@ -23,7 +23,7 @@
   ],
   "specialty": "General physician; emergency department for any escalation sign.",
   "sources": [
-    { "title": "WHO — oral rehydration" }
+    { "title": "WHO — oral rehydration", "url": "https://www.who.int/news-room/fact-sheets/detail/diarrhoeal-disease", "accessedOn": "2026-05-23" }
   ],
   "reviewedBy": null,
   "reviewedOn": null,
